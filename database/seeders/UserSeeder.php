@@ -19,9 +19,9 @@ class UserSeeder extends Seeder
             User::create([
                 'name' => $guards[$i].'@gmail.com',
                 'email' => $guards[$i].'@gmail.com',
-                'phone' => '0120000000'.$i,
+                // 'phone' => '0120000000'.$i,
                 'password' => Hash::make('123123'),
-                'update_code' => rand('1000','9999'),
+                // 'update_code' => rand('1000','9999'),
                 'guard' => $guards[$i],
             ]);
         }
