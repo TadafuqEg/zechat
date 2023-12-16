@@ -15,14 +15,56 @@ trait RespondsWithHttpStatus
         ], $status);
     }
 
-    protected function successWithPagination($message, $data = [], $status = Response::HTTP_OK)
+    protected function successWithPagination($message='', $data = [], $status = Response::HTTP_OK)
     {
+        $meta = [
+            'total' => $data->total(),
+            'per_page' => $data->perPage(),
+            'current_page' => $data->currentPage(),
+            'last_page' => $data->lastPage(),
+            // Add any additional meta information you need
+        ];
+        
+        $links = [
+            'prev' => $data->previousPageUrl(),
+            'next' => $data->nextPageUrl(),
+            // Add any additional links you need
+        ];
         return response([
             'success' => true,
-            'data' => $data['data'] ?? null,
-            'links' => $data['links'],
-            'meta' => $data['meta'],
-            'message' => $message == ''?'The operation has been done':$message,
+            'data' => $data->items(),
+            'links' => $links,
+            'meta' => $meta,
+            'message' => $message,
+        ], $status);
+    }
+
+    protected function successWithPaginationResource($message='', $data = [], $status = Response::HTTP_OK)
+    {
+        // Access the paginator instance from the resource collection
+        $paginator = $data->resource;
+
+        // Retrieve meta and links information
+        $meta = [
+            'total' => $paginator->total(),
+            'per_page' => $paginator->perPage(),
+            'current_page' => $paginator->currentPage(),
+            'last_page' => $paginator->lastPage(),
+            // Add any additional meta information you need
+        ];
+
+        $links = [
+            'prev' => $paginator->previousPageUrl(),
+            'next' => $paginator->nextPageUrl(),
+            // Add any additional links you need
+        ];
+
+        return response([
+            'success' => true,
+            'data' => $data,
+            'links' => $links,
+            'meta' => $meta,
+            'message' => $message,
         ], $status);
     }
 

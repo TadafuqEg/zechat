@@ -11,6 +11,7 @@ class UserService
     public function login($data){
         if (auth()->attempt(['email' => $data['email'], 'password' => $data['password'], 'guard' => $data['guard']])) {
             $user =  auth()->user();
+            $user->update(['is_online' => 1,'lastSignInTime' => now()->format('Y-m-d H:i:s')]);
             $user->access_token = $user->createToken('testing')->plainTextToken;
             return response(['success' => true,'data'=>$user,'message'=>'The operation has been done'],200);
         }else{
@@ -19,6 +20,13 @@ class UserService
             }
             return response(['success' => false,'message' => 'Invalid Credentials.'],401);
         }
+    }
+
+    public function register($data){
+        $data['lastSignInTime']  = now()->format('Y-m-d H:i:s');
+        $user =  User::create($data);
+        $user->access_token = $user->createToken('testing')->plainTextToken;
+        return response(['success' => true,'data'=>$user,'message'=>'The operation has been done'],200);
     }
     public function changePassword($data){
         $user = User::find(auth()->user()->id);

@@ -6,7 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-
+use Faker\Factory as Faker;
 class UserSeeder extends Seeder
 {
     /**
@@ -17,12 +17,19 @@ class UserSeeder extends Seeder
         $guards = ['admin','user'];
         for($i=0;$i<2;$i++){
             User::create([
-                'name' => $guards[$i].'@gmail.com',
+                'name' => $guards[$i],
                 'email' => $guards[$i].'@gmail.com',
-                // 'phone' => '0120000000'.$i,
                 'password' => Hash::make('123123'),
-                // 'update_code' => rand('1000','9999'),
                 'guard' => $guards[$i],
+            ]);
+        }
+        $faker = Faker::create();
+        
+        for($i=0;$i<200;$i++){
+            User::create([
+                'name' => $faker->name,
+                'email' => $faker->email,
+                'password' => Hash::make('123123'),
             ]);
         }
     }

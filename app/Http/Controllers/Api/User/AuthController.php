@@ -7,6 +7,8 @@ use App\Http\Requests\ChangePasswordRequest;
 use Illuminate\Http\Request;
 use App\Http\Services\UserService;
 use App\Http\Requests\User\AuthRequest;
+use App\Http\Requests\User\RegisterRequest;
+
 class AuthController extends Controller
 {
     protected $userService;
@@ -22,6 +24,15 @@ class AuthController extends Controller
         $data['guard'] = 'user';
         return $this->userService->login($data);
     }
+
+    public function register(RegisterRequest $request)
+    {
+        $data = $request->all();
+        $data['guard'] = 'user';
+        $data['is_online'] = 1;
+        return $this->userService->register($data);
+    }
+
 
     public function userInfo()
     {

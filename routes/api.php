@@ -15,20 +15,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['middleware' => ['json.response','cors']], function () {
-    Route::post('/admin/login','Api\Admin\AuthController@login');
     Route::post('/user/login','Api\User\AuthController@login');
-    Route::group(['prefix' => 'dashboard','namespace' => 'Api\Admin' , 'middleware' => ['auth:api','admin-middleware']], function () {
-        Route::resource('users','UserController')->except(['create','edit']);;
-        Route::post('users/update/{user}','UserController@update');
-        // Route::post('users/generate-update-code/{id}','UserController@generateUpdateCode');
-        Route::post('change-password','AuthController@changePassword');
-
-    });
-
+    Route::post('/user/register','Api\User\AuthController@register');
 
     Route::group(['prefix' => 'user','namespace' => 'Api\User' , 'middleware' => ['auth:api','user-middleware']], function () {
         Route::get('info','AuthController@userInfo');
         Route::post('change-password','AuthController@changePassword');
+        Route::get('unfriends-list','FriendController@unfriendsList');
+        Route::get('friends-list','FriendController@friendsList');
+        Route::get('received-friend-requests-list','FriendController@friendRequestsReceivedList');
+        Route::get('sent-friend-requests-list','FriendController@SentFriendRequestsList');
+        Route::get('get-messages/{userId}','MessageController@getMessages');
+        Route::post('send-message','MessageController@sendMessage');
         
     });
 });
