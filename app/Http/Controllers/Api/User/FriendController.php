@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\User;
 use App\Models\Friend;
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AcceptOrRejectFriendRequestRequest;
+use App\Http\Requests\SendFriendRequestRequest;
 use App\Http\Resources\FriendRequestsReceivedListResource;
 use App\Http\Resources\SentFriendRequestsListResource;
 use Illuminate\Http\Request;
@@ -44,5 +46,36 @@ class FriendController extends Controller
         $unfriendList = User::where('guard','user')->whereIn('id',$friendsIsArray)->where('id','<>',$user->id)->paginate(12);
         return $this->successWithPagination(data:$unfriendList);
     }
-    
+
+    public function friendRequest(SendFriendRequestRequest $request)
+    {
+        $user = auth('api')->user();
+        $data = $request->validated();
+        $data['sender_id'] = $user->id;
+        $data['status'] = 'pending';
+        $checkIfIsset = Friend::where(function($query) use($data){
+            $query->where('sender_id',$data['sender_id'])->where('receiver_id',$data['receiver_id']);
+        })->orWhere(function($query) use($data){
+            $query->where('sender_id',$data['receiver_id'])->where('receiver_id',$data['sender_id']);
+        })->count();
+        if($checkIfIsset > 0)
+        {
+            return $this->failure('There is a friend request already submitted',409);
+        }
+        Friend::create($data);
+        return $this->success('sent successfully');
+    }
+
+    public function AcceptOrRejectFriendRequest(AcceptOrRejectFriendRequestRequest $request,$id)
+    {
+        $user = auth('api')->user();
+        $friend = Friend::where('id',$id)->where('receiver_id',$user->id)->firstOrFail();
+        if($request->action == 'accept')
+        {
+            $friend->update(['status','accepted']);
+        }else{
+            $friend->delete();
+        }
+        return $this->success('operation has been done successfully');
+    }
 }

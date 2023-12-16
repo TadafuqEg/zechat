@@ -9,6 +9,8 @@ class Friend extends Model
 {
     use HasFactory;
     
+    protected $guarded = [];
+    
     public function receiver()
     {
         return $this->belongsTo(User::class,'receiver_id');

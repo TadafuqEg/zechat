@@ -25,8 +25,12 @@ Route::group(['middleware' => ['json.response','cors']], function () {
         Route::get('friends-list','FriendController@friendsList');
         Route::get('received-friend-requests-list','FriendController@friendRequestsReceivedList');
         Route::get('sent-friend-requests-list','FriendController@SentFriendRequestsList');
+        Route::post('send-friend-request','FriendController@friendRequest');
+        Route::post('accept-or-reject-friend-request/{id}','FriendController@AcceptOrRejectFriendRequest');
+
         Route::get('get-messages/{userId}','MessageController@getMessages');
         Route::post('send-message','MessageController@sendMessage');
-        
+        // friendRequest
+        // AcceptOrRejectFriendRequest
     });
 });
