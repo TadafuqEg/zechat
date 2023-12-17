@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             // $table->string('phone');
             $table->dateTime('lastSignInTime')->nullable();
+            $table->string('uid')->nullable();
             $table->string('status')->nullable();
             $table->string('FcmToken')->nullable();
             $table->string('password');

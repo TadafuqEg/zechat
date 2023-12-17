@@ -26,6 +26,7 @@ class RegisterRequest extends FormRequest
             'email' => 'required|unique:users',
             'FcmToken' => 'required',
             'password' => 'required|confirmed',
+            'uid' => 'nullable|unique:users'
         ];
     }
 }

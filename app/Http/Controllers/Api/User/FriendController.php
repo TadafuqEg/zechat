@@ -13,6 +13,18 @@ use Illuminate\Http\Request;
 
 class FriendController extends Controller
 {
+    public function search(Request $request)
+    {
+        $user = auth('api')->user();
+        $friends = Friend::where('sender_id',$user->id)->orWhere('receiver_id',$user->id)->where('status','accepted')->get();
+        $friendsIsArray = array_merge($friends->pluck('sender_id')->toArray(),$friends->pluck('receiver_id')->toArray());
+        array_merge($friends->pluck('sender_id')->toArray(),$friends->pluck('receiver_id')->toArray());
+        $users = User::where('guard','user')->where('id','<>',auth()->user()->id)->whereNotIn('id',$friendsIsArray)->when(isset($request->name_or_email) && $request->name_or_email !=null && $request->name_or_email != '' , function($query) use($request){
+            $query->where('name','like','%'.$request->name_or_email.'%')->orWhere('email','like','%'.$request->name_or_email.'%');
+        })->paginate(12);
+        
+        return $this->successWithPagination(data:$users);
+    }
     public function unfriendsList()
     {
         $user = auth('api')->user();
