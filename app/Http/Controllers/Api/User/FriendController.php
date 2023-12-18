@@ -84,7 +84,7 @@ class FriendController extends Controller
         $friend = Friend::where('id',$id)->where('receiver_id',$user->id)->firstOrFail();
         if($request->action == 'accept')
         {
-            $friend->update(['status','accepted']);
+            $friend->update(['status'=>'accepted']);
         }else{
             $friend->delete();
         }
