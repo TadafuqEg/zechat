@@ -10,9 +10,12 @@ use App\Http\Requests\SendFriendRequestRequest;
 use App\Http\Resources\FriendRequestsReceivedListResource;
 use App\Http\Resources\SentFriendRequestsListResource;
 use Illuminate\Http\Request;
+use App\Traits\SendFirebase;
 
 class FriendController extends Controller
 {
+    use SendFirebase;
+
     public function search(Request $request)
     {
         $user = auth('api')->user();
@@ -75,6 +78,17 @@ class FriendController extends Controller
             return $this->failure('There is a friend request already submitted',409);
         }
         Friend::create($data);
+        $receiver = User::find($data['receiver_id']);
+        $fcmToken = $receiver->FcmToken??'';
+        $this->sendFirebaseNotification(title:'New friend request',notificationBody:[
+            'type' => 'new_friend_request',
+            'message' => 'you have a new friend request from '.$user->name,
+            'sender_id' => $user->id,
+            'sender_name' => $user->name,
+            'receiver_id' => $receiver->id,
+            'receiver_name' => $receiver->name,
+        ],token:$fcmToken);
+
         return $this->success('sent successfully');
     }
 
@@ -85,9 +99,21 @@ class FriendController extends Controller
         if($request->action == 'accept')
         {
             $friend->update(['status'=>'accepted']);
+            $sender = User::find($friend->sender_id);
+            $fcmToken = $sender->FcmToken??'';
+            $this->sendFirebaseNotification(title:'Friend request accepted',notificationBody:[
+                'type' => 'friend_request_accepted',
+                'message' => $user->name.' accept your friend request',
+                'sender_id' => $sender->id,
+                'sender_name' => $sender->name,
+                'receiver_id' => $user->id,
+                'receiver_name' => $user->name,
+            ],token:$fcmToken);
         }else{
             $friend->delete();
         }
+
+        
         return $this->success('operation has been done successfully');
     }
 }

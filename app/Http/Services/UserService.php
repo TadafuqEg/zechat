@@ -11,7 +11,12 @@ class UserService
     public function login($data){
         if (auth()->attempt(['email' => $data['email'], 'password' => $data['password'], 'guard' => $data['guard']])) {
             $user =  auth()->user();
-            $user->update(['is_online' => 1,'lastSignInTime' => now()->format('Y-m-d H:i:s')]);
+            $updateData = ['is_online' => 1,'lastSignInTime' => now()->format('Y-m-d H:i:s')];
+            if(isset($data['FcmToken']) && $data['FcmToken'] != null && $data['FcmToken'] != '')
+            {
+                $updateData['FcmToken'] = $data['FcmToken'] ;
+            }
+            $user->update($updateData);
             $user->access_token = $user->createToken('testing')->plainTextToken;
             return response(['success' => true,'data'=>$user,'message'=>'The operation has been done'],200);
         }else{

@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Api\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SendMessageRequest;
 use App\Models\Message;
+use App\Models\User;
 use Illuminate\Http\Request;
-
+use App\Traits\SendFirebase;
 class MessageController extends Controller
 {
+    use SendFirebase;
     public function getMessages($userId)
     {
         $user = auth('api')->user();
@@ -23,9 +25,22 @@ class MessageController extends Controller
     public function sendMessage(SendMessageRequest $request)
     {
         $data = $request->validated();
-        $data['sender_id'] = auth('api')->user()->id;
+        $user = auth('api')->user();
+        $data['sender_id'] = $user->id;
         $message = Message::create($data);
         $message->receiver_id = (int)$message->receiver_id;
+
+        $receiver = User::find($data['receiver_id']);
+        $fcmToken = $receiver->FcmToken??'';
+        $this->sendFirebaseNotification(title:'you have a new message  from '.$user->name,notificationBody:[
+            'type' => 'new_message',
+            'message' => $message->message,
+            'sender_id' => $user->id,
+            'sender_name' => $user->name,
+            'receiver_id' => $receiver->id,
+            'receiver_name' => $receiver->name,
+        ],token:$fcmToken,message:$message->message);
+
         return $this->success(data:$message);
     }
 }
