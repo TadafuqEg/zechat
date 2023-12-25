@@ -37,8 +37,10 @@ class MessageController extends Controller
             'message' => $message->message,
             'sender_id' => $user->id,
             'sender_name' => $user->name,
+            'sender_email' => $user->email,
             'receiver_id' => $receiver->id,
             'receiver_name' => $receiver->name,
+            'receiver_email' => $receiver->email,
         ],token:$fcmToken,message:$message->message);
 
         return $this->success(data:$message);

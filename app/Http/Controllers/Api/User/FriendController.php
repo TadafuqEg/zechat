@@ -85,8 +85,10 @@ class FriendController extends Controller
             'message' => 'you have a new friend request from '.$user->name,
             'sender_id' => $user->id,
             'sender_name' => $user->name,
+            'sender_email' => $user->email,
             'receiver_id' => $receiver->id,
             'receiver_name' => $receiver->name,
+            'receiver_email' => $receiver->email,
         ],token:$fcmToken);
 
         return $this->success('sent successfully');
