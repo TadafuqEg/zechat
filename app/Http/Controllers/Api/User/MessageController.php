@@ -60,7 +60,7 @@ class MessageController extends Controller
             'receiver_id' => $receiver->id,
             'receiver_name' => $receiver->name,
             'receiver_email' => $receiver->email,
-        ],token:$request,message:'you have a call from '.$sender->name);
+        ],token:$receiver->FcmToken,message:'you have a call from '.$sender->name);
         return $this->success();
     }
 }
