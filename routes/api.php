@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Requests\RequestCallRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -34,5 +35,7 @@ Route::group(['middleware' => ['json.response','cors']], function () {
         
         // friendRequest
         // AcceptOrRejectFriendRequest
+
+        Route::post('request-call','MessageController@requestCall');
     });
 });
