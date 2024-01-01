@@ -22,6 +22,10 @@ Route::group(['middleware' => ['json.response','cors']], function () {
     Route::group(['prefix' => 'user','namespace' => 'Api\User' , 'middleware' => ['auth:api','user-middleware']], function () {
         Route::get('info','AuthController@userInfo');
         Route::post('change-password','AuthController@changePassword');
+        Route::post('update-info','AuthController@updateInfo');
+        Route::post('change-online-status','AuthController@changeOnlineStatus');
+        
+
         Route::get('unfriends-list','FriendController@unfriendsList');
         Route::get('friends-list','FriendController@friendsList');
         Route::get('received-friend-requests-list','FriendController@friendRequestsReceivedList');
@@ -32,6 +36,7 @@ Route::group(['middleware' => ['json.response','cors']], function () {
 
         Route::get('get-messages/{userId}','MessageController@getMessages');
         Route::post('send-message','MessageController@sendMessage');
+        Route::get('chats-list','MessageController@userChatsList');
         
         // friendRequest
         // AcceptOrRejectFriendRequest

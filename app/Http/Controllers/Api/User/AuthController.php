@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ChangeOnlineStatusRequest;
 use App\Http\Requests\ChangePasswordRequest;
+use App\Http\Requests\UpdateUserInfoRequest;
 use Illuminate\Http\Request;
 use App\Http\Services\UserService;
 use App\Http\Requests\User\AuthRequest;
@@ -38,6 +40,20 @@ class AuthController extends Controller
     {
         return $this->success(data:auth()->user());
     }
+
+    public function updateInfo(UpdateUserInfoRequest $request)
+    {
+        $this->userService->update($request->all(),auth()->user());
+        return $this->success();
+    }
+
+    public function changeOnlineStatus(ChangeOnlineStatusRequest $request)
+    {
+        $this->userService->changeOnlineStatus($request->is_online,auth()->user());
+        return $this->success();
+    }
+
+    
 
     public function changePassword(ChangePasswordRequest $request){
         return $this->userService->changePassword($request->all());

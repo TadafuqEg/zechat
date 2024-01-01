@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Carbon\Carbon;
 /*
@@ -74,3 +75,11 @@ Route::get('testing',function(){
 //     $fireBase = new App\Traits\SendFirebase();
 //     $fireBase->sendFirebaseNotification(notificationBody:['type'=>'you have a new friend request'],token:'d0oA0Tg2TvCLqj_FfvZrU0:APA91bHcLEKf61OscV8-CW8QEQ36PE8iAaGDTSH-usw2R9yYn8Pqw733S4rSVvkU7RQqHayBIwDzITflU1kWd55ff_qhzrKtj0MhrfTb3-QzyRTtMvsLGMMfC-V1Fnd-qAcpLxafguBm');
 // });
+
+Route::get('testing',function(){
+    $user = User::find(208);
+    $userChats = User::whereHas('messages', function ($query) use ($user) {
+        $query->where('sender_id', $user->id)->orWhere('receiver_id', $user->id);
+    })->get();
+    dd($userChats);
+});

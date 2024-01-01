@@ -63,4 +63,14 @@ class MessageController extends Controller
         ],token:$receiver->FcmToken,message:'you have a call from '.$sender->name);
         return $this->success();
     }
+
+
+    public function userChatsList()
+    {
+        $user = auth()->user();
+        $userChats = User::whereHas('messages', function ($query) use ($user) {
+            $query->where('sender_id', $user->id)->orWhere('receiver_id', $user->id);
+        })->get();
+        return $this->success(data:$userChats);
+    }
 }

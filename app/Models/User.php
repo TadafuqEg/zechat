@@ -16,7 +16,19 @@ class User extends Authenticatable
 
 
     protected $guarded = ['password_confirmation'];
-    
+
+    protected $appends = ['profile_image_full_url'];
+
+    public function getProfileImageFullUrlAttribute()
+    {
+        return asset('/profile_images/'.$this->attributes['profile_image']);
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class, 'sender_id')->orWhere('receiver_id', $this->id);
+    }
+
     protected $hidden = [
         'password',
         'remember_token',

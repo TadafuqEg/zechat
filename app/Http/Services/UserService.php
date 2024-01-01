@@ -53,7 +53,25 @@ class UserService
         if(!is_object($user)){
             $user = User::findOrFail($user);
         }
+        if(isset($data['profile_image']))
+        {
+            $imageName = time().'.'.$data['profile_image']->extension();
+    
+            $data['profile_image']->move(public_path('profile_images'), $imageName);
+            $data['profile_image'] = $imageName;
+        }
         $user->update($data);
+        return $user;
+    }
+
+    public function changeOnlineStatus($is_online,$user)
+    {
+        if(!is_object($user)){
+            $user = User::findOrFail($user);
+        }
+        $user->update([
+            'is_online' => $is_online
+        ]);
         return $user;
     }
 
