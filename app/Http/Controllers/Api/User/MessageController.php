@@ -19,7 +19,7 @@ class MessageController extends Controller
             $query->where('sender_id',$user->id)->where('receiver_id',$userId);
         })->orWhere(function($query) use($userId ,$user) {
             $query->where('receiver_id',$user->id)->where('sender_id',$userId);
-        })->orderBy('id','DESC')->paginate(12);
+        })->orderBy('id','DESC')->paginate(8);
         return $this->successWithPagination(data:$messages);
     }
 

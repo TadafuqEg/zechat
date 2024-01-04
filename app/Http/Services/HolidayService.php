@@ -13,7 +13,7 @@ class HolidayService
         if(isset($data['to']) && $data['to'] != null && $data['to'] !=''){
             $holiday = $holiday->where('date','<=',$data['date_to']);
         }
-        return $holiday->paginate(12);
+        return $holiday->paginate(8);
     }
 
     public function store($data){
