@@ -23,8 +23,9 @@ class MessageController extends Controller
             $query->where('receiver_id',$user->id)->where('sender_id',$userId);
         })->orderBy('id','DESC')->paginate(20);
         foreach ($messages->items() as $msg) {
-            $msg->time = $msg->created_at->setTimezone('Africa/Cairo')->format('H:i A');
-            $msg->path=url($msg->path);
+            $msg->time = $msg->created_at->setTimezone('Africa/Cairo')->format('h:i A');
+            if($msg->path!=null)
+              $msg->path=url($msg->path);
             
         }
         return $this->successWithPagination(data:$messages);
@@ -35,6 +36,7 @@ class MessageController extends Controller
         $data = $request->validated();
         $user = auth('api')->user();
         $data['sender_id'] = $user->id;
+        set_time_limit(10000000);
         if($request->file('image')){
             $directory = public_path('images');
 
@@ -56,13 +58,27 @@ class MessageController extends Controller
             }
         
             $invitation_code = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_'), 0, 12);
-            $video = $user->id . '_' . $invitation_code . '' . time() . '.' . $request->video->extension();
+            $video = $user->id . '_' . $invitation_code . '_' . time() . '.' . $request->video->extension();
         
             $request->video->move(public_path('videos/'), $video);
             $path = ('/videos/') . $video;
             $data['path'] = $path;
             $data['type'] = 'video';
-        }
+        }else if($request->file('sheet')){
+            $directory = public_path('files');
+
+           if (!File::exists($directory)) {
+               File::makeDirectory($directory, 0755, true);
+           }
+       
+           $invitation_code = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_'), 0, 12);
+           $file_1 = $user->id . '_' . $invitation_code . '_' . time() . '.' . $request->sheet->extension();
+       
+           $request->sheet->move(public_path('files/'), $file_1);
+           $path = ('/files/') . $file_1;
+           $data['path'] = $path;
+           $data['type'] = 'file';
+       }
         
         $message = Message::create($data);
         $message->receiver_id = (int)$message->receiver_id;
