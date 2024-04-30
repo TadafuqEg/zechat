@@ -21,7 +21,7 @@ class AuthController extends Controller
     }
 
     public function login(AuthRequest $request)
-    {
+    {   
         $data = $request->all();
         $data['guard'] = 'user';
         return $this->userService->login($data);

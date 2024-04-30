@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RequestCallRequest;
 use App\Http\Requests\SendMessageRequest;
 use App\Models\Message;
+use Illuminate\Support\Facades\File;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Traits\SendFirebase;
 class MessageController extends Controller
@@ -20,17 +22,51 @@ class MessageController extends Controller
         })->orWhere(function($query) use($userId ,$user) {
             $query->where('receiver_id',$user->id)->where('sender_id',$userId);
         })->orderBy('id','DESC')->paginate(20);
+        foreach ($messages->items() as $msg) {
+            $msg->time = $msg->created_at->setTimezone('Africa/Cairo')->format('H:i A');
+            $msg->path=url($msg->path);
+            
+        }
         return $this->successWithPagination(data:$messages);
     }
 
     public function sendMessage(SendMessageRequest $request)
-    {
+    {  
         $data = $request->validated();
         $user = auth('api')->user();
         $data['sender_id'] = $user->id;
+        if($request->file('image')){
+            $directory = public_path('images');
+
+            if (!File::exists($directory)) {
+                File::makeDirectory($directory, 0755, true);
+            }
+            $invitation_code = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_'), 0, 12);
+            $image = $user->id.'_'.$invitation_code.''.time() . '.' . $request->image->extension();
+
+            $request->image->move(public_path('images/'), $image);
+            $path = ('/images/') . $image;
+            $data['path'] = $path;
+            $data['type']='image';
+        }else if($request->file('video')){
+            $directory = public_path('videos');
+
+            if (!File::exists($directory)) {
+                File::makeDirectory($directory, 0755, true);
+            }
+        
+            $invitation_code = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_'), 0, 12);
+            $video = $user->id . '_' . $invitation_code . '' . time() . '.' . $request->video->extension();
+        
+            $request->video->move(public_path('videos/'), $video);
+            $path = ('/videos/') . $video;
+            $data['path'] = $path;
+            $data['type'] = 'video';
+        }
+        
         $message = Message::create($data);
         $message->receiver_id = (int)$message->receiver_id;
-
+        
         $receiver = User::find($data['receiver_id']);
         $fcmToken = $receiver->FcmToken??'';
         $this->sendFirebaseNotification(title:'you have a new message  from '.$user->name,notificationBody:[
@@ -43,7 +79,7 @@ class MessageController extends Controller
             'receiver_name' => $receiver->name,
             'receiver_email' => $receiver->email,
         ],token:$fcmToken,message:$message->message);
-
+        $message->path=url($message->path);
         return $this->success(data:$message);
     }
 

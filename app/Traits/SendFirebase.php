@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Http;
 trait SendFirebase
 {
     public function sendFirebaseNotification($title, $notificationBody , $type=null, $token = null , $tokens = [] ,$message=''){
+        
         $SERVER_API_KEY = "AAAAH30XrvI:APA91bEq5TC1G10d9n40M4ihBdla5VRhWZJRtzHc_Ih8zS1u6yVeHru84DF9ujoYuMM8NrMvtAG1uAn3i2vcbas6ffZVNWETOp9vZOk0FLQnWm4vMb86c1j1EozQ1uxrHLuJcQ8NOoz4";
 
         $data = [

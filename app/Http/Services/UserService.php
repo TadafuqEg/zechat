@@ -9,7 +9,9 @@ use Illuminate\Support\Str;
 class UserService
 {
     public function login($data){
+       
         if (auth()->attempt(['email' => $data['email'], 'password' => $data['password'], 'guard' => $data['guard']])) {
+            
             $user =  auth()->user();
             $updateData = ['is_online' => 1,'lastSignInTime' => now()->format('Y-m-d H:i:s')];
             if(isset($data['FcmToken']) && $data['FcmToken'] != null && $data['FcmToken'] != '')
@@ -20,6 +22,7 @@ class UserService
             $user->access_token = $user->createToken('testing')->plainTextToken;
             return response(['success' => true,'data'=>$user,'message'=>'The operation has been done'],200);
         }else{
+            
             if(User::where('email',$data['email'])->count() > 0){
                 return response(['success' => false,'message' => 'Invalid password.'],401);
             }

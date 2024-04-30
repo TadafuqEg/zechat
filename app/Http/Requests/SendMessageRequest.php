@@ -27,6 +27,7 @@ class SendMessageRequest extends FormRequest
             // 'sender_id' => ['required',Rule::in(User::pluck('id'))],
             'receiver_id' => ['required',Rule::in(User::pluck('id'))],
             'message' => 'required'
+            
         ];
     }
 }
