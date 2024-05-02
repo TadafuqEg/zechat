@@ -13,12 +13,14 @@ trait SendFirebase
         $data = [
             "notification" => [
                 "title" => $title,
-                "body" => $notificationBody,
+                "body" => $message,
                 "sound"=> "default"
             ],
             'data' => [
-                "message" => $message
+                "message" => $message,
+                "data"=> $notificationBody
             ],
+            
         ];
 
         if ($token == null)

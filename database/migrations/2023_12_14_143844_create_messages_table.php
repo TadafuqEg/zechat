@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreign('receiver_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('path')->nullable();
             $table->string('type')->nullable();
+            $table->longText('location_link')->nullable();
             $table->timestamps();
         });
     }

@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class SendMessageRequest extends FormRequest
+class MakeUserAdminRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,8 +25,7 @@ class SendMessageRequest extends FormRequest
     {
         return [
             // 'sender_id' => ['required',Rule::in(User::pluck('id'))],
-            'receiver_id' => ['required',Rule::in(User::pluck('id'))],
-            'message' => 'nullable'
+            'user_id' => ['required',Rule::in(User::pluck('id'))],
             
         ];
     }

@@ -36,6 +36,9 @@ class MessageController extends Controller
         $data = $request->validated();
         $user = auth('api')->user();
         $data['sender_id'] = $user->id;
+        ini_set('post_max_size', '500M');
+        ini_set('upload_max_filesize', '500M');
+        ini_set('memory_limit', '1000M');
         set_time_limit(10000000);
         if($request->file('image')){
             $directory = public_path('images');
@@ -78,14 +81,14 @@ class MessageController extends Controller
            $path = ('/files/') . $file_1;
            $data['path'] = $path;
            $data['type'] = 'file';
-       }
-        
+        }
+        $data['location_link'] = $request->location_link;
         $message = Message::create($data);
         $message->receiver_id = (int)$message->receiver_id;
         
         $receiver = User::find($data['receiver_id']);
         $fcmToken = $receiver->FcmToken??'';
-        $this->sendFirebaseNotification(title:'you have a new message  from '.$user->name,notificationBody:[
+        $this->sendFirebaseNotification(title:'you have a new message from '.$user->name,notificationBody:[
             'type' => 'new_message',
             'message' => $message->message,
             'sender_id' => $user->id,
@@ -95,7 +98,8 @@ class MessageController extends Controller
             'receiver_name' => $receiver->name,
             'receiver_email' => $receiver->email,
         ],token:$fcmToken,message:$message->message);
-        $message->path=url($message->path);
+        if($message->path!=null)
+            $message->path=url($message->path);
         return $this->success(data:$message);
     }
 
@@ -124,5 +128,82 @@ class MessageController extends Controller
             $query->where('sender_id', $user->id)->orWhere('receiver_id', $user->id);
         })->get();
         return $this->success(data:$userChats);
+    }
+
+    public function sendAdminMessage(Request $request)
+    {  
+        $data['message'] = $request->message;
+        $user = auth('api')->user();
+        $data['sender_id'] = $user->id;
+        ini_set('post_max_size', '500M');
+        ini_set('upload_max_filesize', '500M');
+        ini_set('memory_limit', '1000M');
+        set_time_limit(10000000);
+        if($request->file('image')){
+            $directory = public_path('images');
+
+            if (!File::exists($directory)) {
+                File::makeDirectory($directory, 0755, true);
+            }
+            $invitation_code = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_'), 0, 12);
+            $image = $user->id.'_'.$invitation_code.''.time() . '.' . $request->image->extension();
+
+            $request->image->move(public_path('images/'), $image);
+            $path = ('/images/') . $image;
+            $data['path'] = $path;
+            $data['type']='image';
+        }else if($request->file('video')){
+            $directory = public_path('videos');
+
+            if (!File::exists($directory)) {
+                File::makeDirectory($directory, 0755, true);
+            }
+        
+            $invitation_code = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_'), 0, 12);
+            $video = $user->id . '_' . $invitation_code . '_' . time() . '.' . $request->video->extension();
+        
+            $request->video->move(public_path('videos/'), $video);
+            $path = ('/videos/') . $video;
+            $data['path'] = $path;
+            $data['type'] = 'video';
+        }else if($request->file('sheet')){
+            $directory = public_path('files');
+
+           if (!File::exists($directory)) {
+               File::makeDirectory($directory, 0755, true);
+           }
+       
+           $invitation_code = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_'), 0, 12);
+           $file_1 = $user->id . '_' . $invitation_code . '_' . time() . '.' . $request->sheet->extension();
+       
+           $request->sheet->move(public_path('files/'), $file_1);
+           $path = ('/files/') . $file_1;
+           $data['path'] = $path;
+           $data['type'] = 'file';
+        }
+        $data['location_link'] = $request->location_link;
+        $all_users=User::where('id','!=',$user->id)->get();
+        foreach($all_users as $client){
+            $data['receiver_id']=$client->id;
+            $message = Message::create($data);
+            $message->receiver_id = (int)$message->receiver_id;
+            
+            //$receiver = User::find($data['receiver_id']);
+            $fcmToken = $client->FcmToken??'';
+            $this->sendFirebaseNotification(title:'you have a new message from '.$user->name,notificationBody:[
+                'type' => 'new_message',
+                'message' => $message->message,
+                'sender_id' => $user->id,
+                'sender_name' => $user->name,
+                'sender_email' => $user->email,
+                'receiver_id' => $client->id,
+                'receiver_name' => $client->name,
+                'receiver_email' => $client->email,
+            ],token:$fcmToken,message:$message->message);
+        }
+        
+        if($message->path!=null)
+            $message->path=url($message->path);
+        return $this->success(data:$message);
     }
 }
