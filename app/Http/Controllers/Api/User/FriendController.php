@@ -22,7 +22,7 @@ class FriendController extends Controller
         $friends = Friend::where('sender_id',$user->id)->orWhere('receiver_id',$user->id)->where('status','accepted')->get();
         $friendsIsArray = array_merge($friends->pluck('sender_id')->toArray(),$friends->pluck('receiver_id')->toArray());
         array_merge($friends->pluck('sender_id')->toArray(),$friends->pluck('receiver_id')->toArray());
-        $users = User::where('guard','user')->where('id','<>',auth()->user()->id)->whereNotIn('id',$friendsIsArray)->when(isset($request->name_or_email) && $request->name_or_email !=null && $request->name_or_email != '' , function($query) use($request){
+        $users = User::where('id','<>',auth()->user()->id)->whereNotIn('id',$friendsIsArray)->when(isset($request->name_or_email) && $request->name_or_email !=null && $request->name_or_email != '' , function($query) use($request){
             $query->where('name','like','%'.$request->name_or_email.'%')->orWhere('email','like','%'.$request->name_or_email.'%');
         })->paginate(8);
         
@@ -33,7 +33,7 @@ class FriendController extends Controller
         $user = auth('api')->user();
         $friends = Friend::where('sender_id',$user->id)->orWhere('receiver_id',$user->id)->get();
         $friendsIsArray = array_merge($friends->pluck('sender_id')->toArray(),$friends->pluck('receiver_id')->toArray());
-        $unfriendList = User::where('guard','user')->whereNotIn('id',$friendsIsArray)->paginate(8);
+        $unfriendList = User::whereNotIn('id',$friendsIsArray)->paginate(8);
         return $this->successWithPagination(data:$unfriendList);
     }
 
@@ -58,7 +58,7 @@ class FriendController extends Controller
         $user = auth('api')->user();
         $friends = Friend::where('sender_id',$user->id)->orWhere('receiver_id',$user->id)->where('status','accepted')->get();
         $friendsIsArray = array_merge($friends->pluck('sender_id')->toArray(),$friends->pluck('receiver_id')->toArray());
-        $unfriendList = User::where('guard','user')->whereIn('id',$friendsIsArray)->where('id','<>',$user->id)->paginate(8);
+        $unfriendList = User::whereIn('id',$friendsIsArray)->where('id','<>',$user->id)->paginate(8);
         return $this->successWithPagination(data:$unfriendList);
     }
 

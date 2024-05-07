@@ -15,9 +15,10 @@ class UserMiddleware
         $user = auth()->user();
         if($user == null){
             return response(['status' => 'error', 'message' => 'unauthorized'], 401);
-        }else if($user->guard != 'user'){
-            return response(['status' => 'error', 'message' => 'unauthorized'], 401);
         }
+        // else if($user->guard != 'user'){
+        //     return response(['status' => 'error', 'message' => 'unauthorized'], 401);
+        // }
         return $next($request);
     }
 }

@@ -79,7 +79,12 @@ class AuthController extends Controller
 
     public function make_user_admin(MakeUserAdminRequest $request){
         $user=User::find($request->user_id);
-        $user->guard='admin';
+        if($user->guard=='user'){
+            $user->guard='admin';
+        }else{
+            $user->guard='user';
+        }
+       
         $user->save();
         return $this->success('Request has been done successfully');
     }

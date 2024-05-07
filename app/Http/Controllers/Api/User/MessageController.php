@@ -11,6 +11,10 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Traits\SendFirebase;
+use Kreait\Firebase\Factory;
+use Kreait\Firebase\ServiceAccount;
+use Google\Cloud\Firestore\FieldPath;
+use Google\Cloud\Firestore\FieldValue;
 class MessageController extends Controller
 {
     use SendFirebase;
@@ -81,6 +85,21 @@ class MessageController extends Controller
            $path = ('/files/') . $file_1;
            $data['path'] = $path;
            $data['type'] = 'file';
+        }else if($request->file('voice')){
+            
+            $directory = public_path('voices');
+
+           if (!File::exists($directory)) {
+               File::makeDirectory($directory, 0755, true);
+           }
+       
+           $invitation_code = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_'), 0, 12);
+           $file_1 = $user->id . '_' . $invitation_code . '_' . time() . '.' . $request->voice->extension();
+       
+           $request->voice->move(public_path('voices/'), $file_1);
+           $path = ('/voices/') . $file_1;
+           $data['path'] = $path;
+           $data['type'] = 'voice';
         }
         $data['location_link'] = $request->location_link;
         $message = Message::create($data);
@@ -98,6 +117,24 @@ class MessageController extends Controller
             'receiver_name' => $receiver->name,
             'receiver_email' => $receiver->email,
         ],token:$fcmToken,message:$message->message);
+        // $serviceAccount = ServiceAccount::fromJsonFile(config_path('firebase-credentials.json'));
+        // $firebase = (new Factory)
+        //     ->withServiceAccount($serviceAccount)
+        //     ->create();
+
+        // Send message with FCM
+       
+
+        // Store message in Firestore
+        // $firestore = $firebase->getFirestore();
+        // $collection = $firestore->collection('messages');
+        // $newMessage = $collection->newDocument();
+        // $newMessage->set([
+        //     'sender_id' => $data['sender_id'],
+        //     'receiver_id' => $data['receiver_id'],
+        //     'message' => $data['message'],
+        //     'created_at' => FieldValue::serverTimestamp(),
+        // ]);
         if($message->path!=null)
             $message->path=url($message->path);
         return $this->success(data:$message);
@@ -180,6 +217,20 @@ class MessageController extends Controller
            $path = ('/files/') . $file_1;
            $data['path'] = $path;
            $data['type'] = 'file';
+        }else if($request->file('voice')){
+            $directory = public_path('voices');
+
+           if (!File::exists($directory)) {
+               File::makeDirectory($directory, 0755, true);
+           }
+       
+           $invitation_code = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_'), 0, 12);
+           $file_1 = $user->id . '_' . $invitation_code . '_' . time() . '.' . $request->voice->extension();
+       
+           $request->voice->move(public_path('voices/'), $file_1);
+           $path = ('/voices/') . $file_1;
+           $data['path'] = $path;
+           $data['type'] = 'voice';
         }
         $data['location_link'] = $request->location_link;
         $all_users=User::where('id','!=',$user->id)->get();
