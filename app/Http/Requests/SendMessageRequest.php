@@ -26,7 +26,8 @@ class SendMessageRequest extends FormRequest
         return [
             // 'sender_id' => ['required',Rule::in(User::pluck('id'))],
             'receiver_id' => ['required',Rule::in(User::pluck('id'))],
-            'message' => 'nullable'
+            'message' => 'nullable',
+            'location_link'=>'nullable'
             
         ];
     }

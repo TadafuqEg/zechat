@@ -27,10 +27,11 @@ trait SendFirebase
             $data['registration_ids'] = $tokens;
         else
             $data['to'] = $token;
-
+            
         Http::withHeaders([
             'Authorization' => 'key=' . $SERVER_API_KEY,
             'Content-Type' => 'application/json'
         ])->post('https://fcm.googleapis.com/fcm/send', $data);
+        
     }
 }
