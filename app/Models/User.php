@@ -21,7 +21,8 @@ class User extends Authenticatable
 
     public function getProfileImageFullUrlAttribute()
     {
-        return asset('/profile_images/'.$this->attributes['profile_image']);
+        //return asset('/profile_images/'.$this->attributes['profile_image']);
+        return '';
     }
 
     public function messages()

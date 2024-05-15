@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateUserInfoRequest;
 use App\Http\Requests\MakeUserAdminRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Services\UserService;
 use App\Http\Requests\User\AuthRequest;
@@ -102,5 +103,24 @@ class AuthController extends Controller
         Auth::guard('web')->logout();
 
         return response()->json(['message' => 'Logged out successfully']);
+    }
+
+    public function all_notifications(){
+       
+        $all_notifications=Notification::where('user_id',auth('api')->user()->id)->orderBy('id','desc')->select('id','data','seen','type','created_at')->get()->map(function ($notify) {
+            $notify->data= json_decode($notify->data,true);
+        //     $notify->body=$notify->data['body'];
+        //     $notify->title=$notify->data['title'];
+        //    // $notify->sound='notification.wav';
+        //     unset($notify->data);
+            return $notify;
+        });
+       
+        return $this->success(data:$all_notifications);
+    }
+    public function see_notification($id){
+        Notification::where('id',$id)->update(['seen'=>1]);
+        
+        return $this->success('notification seen successfuly');
     }
 }

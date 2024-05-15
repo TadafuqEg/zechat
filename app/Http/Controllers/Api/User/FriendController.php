@@ -11,7 +11,8 @@ use App\Http\Resources\FriendRequestsReceivedListResource;
 use App\Http\Resources\SentFriendRequestsListResource;
 use Illuminate\Http\Request;
 use App\Traits\SendFirebase;
-
+use App\Models\Notification;
+use App\Events\NotificationDevice;
 class FriendController extends Controller
 {
     use SendFirebase;
@@ -89,8 +90,22 @@ class FriendController extends Controller
             'receiver_id' => $receiver->id,
             'receiver_name' => $receiver->name,
             'receiver_email' => $receiver->email,
-        ],token:$fcmToken);
-
+        ],token:$fcmToken,message:'you have a new friend request from '.$user->name);
+        $data=[
+            'title'=>'New friend request',
+            'message' => 'you have a new friend request from '.$user->name,
+            'sender_id' => $user->id,
+            'sender_name' => $user->name,
+            'sender_email' => $user->email,
+            'receiver_id' => $receiver->id,
+            'receiver_name' => $receiver->name,
+            'receiver_email' => $receiver->email
+        ];
+        Notification::create([
+            'user_id' => $receiver->id,
+            'data' => json_encode($data),
+            'type' => 'new_friend_request'
+        ]);
         return $this->success('sent successfully');
     }
 
@@ -103,6 +118,83 @@ class FriendController extends Controller
             $friend->update(['status'=>'accepted']);
             $sender = User::find($friend->sender_id);
             $fcmToken = $sender->FcmToken??'';
+            // $data=[
+            //     'type' => 'friend_request_accepted',
+            //     'message' => $user->name.' accept your friend request',
+            //     'sender_id' => $sender->id,
+            //     'sender_name' => $sender->name,
+            //     'receiver_id' => $user->id,
+            //     'receiver_name' => $user->name,
+            // ];
+            // $tokens = [];
+            // $fcmUrl = 'https://fcm.googleapis.com/fcm/send';
+          
+            
+            //     $device_token=$fcmToken;
+                
+              
+            //     if($device_token){
+                   
+            //         $mergedTokens = [$device_token];
+            //         $serverKey = 'AAAAH30XrvI:APA91bEq5TC1G10d9n40M4ihBdla5VRhWZJRtzHc_Ih8zS1u6yVeHru84DF9ujoYuMM8NrMvtAG1uAn3i2vcbas6ffZVNWETOp9vZOk0FLQnWm4vMb86c1j1EozQ1uxrHLuJcQ8NOoz4';
+            //         $fcmData = [
+            //             "registration_ids" => $mergedTokens,
+            //             "notification" => [
+            //                 "title" => 'Friend request accepted',
+            //                 "body" => $user->name.' accept your friend request',
+                           
+            //                 'sound'=>'default'
+                           
+            //             ],
+            //             "data"=>[
+            //                 "message" => $user->name.' accept your friend request',
+            //                 "data" => $data,
+            //                 "title" => 'Friend request accepted',
+            //                 "body" => $user->name.' accept your friend request',
+                           
+            //                 'sound'=>'default'
+                           
+                            
+            //             ],
+                        
+            //         ];
+            //         //$fcmData['to'] = $event->receiver->FcmToken;
+                  
+            //         $encodedData = json_encode($fcmData);
+                   
+            //         $headers = [
+            //             'Authorization'=>'key=' . $serverKey,
+            //             'Content-Type'=>'application/json',
+            //         ];
+        
+            //         $ch = curl_init();
+        
+            //         curl_setopt($ch, CURLOPT_URL, $fcmUrl);
+            //         curl_setopt($ch, CURLOPT_POST, true);
+            //         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            //         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            //         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            //         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+            //         // Disabling SSL Certificate support temporarly
+            //         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            //         curl_setopt($ch, CURLOPT_POSTFIELDS, $encodedData);
+            //         // Execute post
+            //         $result = curl_exec($ch);
+                   
+            //         if ($result === FALSE) {
+            //             die('Curl failed: ' . curl_error($ch));
+            //         }
+                   
+            //         // Close connection
+            //         curl_close($ch);
+            //         // FCM response
+            //         // dd($result);
+   
+                    
+                       
+                    
+
+            //     }
             $this->sendFirebaseNotification(title:'Friend request accepted',notificationBody:[
                 'type' => 'friend_request_accepted',
                 'message' => $user->name.' accept your friend request',
@@ -110,7 +202,20 @@ class FriendController extends Controller
                 'sender_name' => $sender->name,
                 'receiver_id' => $user->id,
                 'receiver_name' => $user->name,
-            ],token:$fcmToken);
+            ],token:$fcmToken,message:$user->name.' accept your friend request');
+            $data=[
+                'title'=>'Friend request accepted',
+                'message' => $user->name.' accept your friend request',
+                'sender_id' => $sender->id,
+                'sender_name' => $sender->name,
+                'receiver_id' => $user->id,
+                'receiver_name' => $user->name,
+            ];
+            Notification::create([
+                'user_id' => $sender->id,
+                'data' => json_encode($data),
+                'type' => 'friend_request_accepted'
+            ]);
         }else{
             $friend->delete();
         }

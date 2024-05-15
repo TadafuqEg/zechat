@@ -74,13 +74,13 @@ class SendNotification
                         ],
                         
                     ];
-                    $fcmData['to'] = $event->receiver->FcmToken;
+                    //$fcmData['to'] = $event->receiver->FcmToken;
                   
                     $encodedData = json_encode($fcmData);
                    
                     $headers = [
-                        'Authorization:key=' . $serverKey,
-                        'Content-Type: application/json',
+                        'Authorization'=>'key=' . $serverKey,
+                        'Content-Type'=>'application/json',
                     ];
         
                     $ch = curl_init();
