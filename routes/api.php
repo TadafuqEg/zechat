@@ -41,11 +41,13 @@ Route::group(['middleware' => ['json.response','cors']], function () {
         
         // friendRequest
         // AcceptOrRejectFriendRequest
-
+        Route::get('all_notifications','AuthController@all_notifications');
         Route::post('request-call','MessageController@requestCall');
 
         Route::get('user-profile/{id}','AuthController@user_profile');
         Route::post('create-admin','AuthController@make_user_admin');
         Route::post('logout', 'AuthController@logout');
+        Route::get('get-admin-messages','MessageController@all_admin_message');
+        Route::get('see-notification/{id}','AuthController@see_notification');
     });
 });
