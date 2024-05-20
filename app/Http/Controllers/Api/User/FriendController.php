@@ -57,7 +57,10 @@ class FriendController extends Controller
     public function friendsList()
     {
         $user = auth('api')->user();
-        $friends = Friend::where('sender_id',$user->id)->orWhere('receiver_id',$user->id)->where('status','accepted')->get();
+        $friends = Friend::where(function($query) use ($user) {
+            $query->where('sender_id', $user->id)
+                  ->orWhere('receiver_id', $user->id);
+        })->where('status', 'accepted')->get();
         $friendsIsArray = array_merge($friends->pluck('sender_id')->toArray(),$friends->pluck('receiver_id')->toArray());
         $unfriendList = User::whereIn('id',$friendsIsArray)->where('id','<>',$user->id)->paginate(8);
         return $this->successWithPagination(data:$unfriendList);

@@ -4,6 +4,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Carbon\Carbon;
 use App\Http\Controllers\dashboard\AuthController;
+use App\Http\Controllers\dashboard\UserController;
+use App\Http\Controllers\dashboard\RoleController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -29,6 +31,18 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('/home', [AuthController::class, 'home'])->name('home');
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
     /////////////////////////////////////////
+    Route::any('/users', [UserController::class, 'index'])->name('users');
+    Route::get('/users/create', [UserController::class, 'create'])->name('add.user');
+    Route::post('/users/create', [UserController::class, 'store'])->name('create.user');
+    Route::get('/user/edit/{id}', [UserController::class, 'edit'])->name('edit.user');
+    Route::post('/user/update/{user}', [UserController::class, 'update'])->name('update.user');
+    Route::get('/user/delete/{id}', [UserController::class, 'delete'])->name('delete.user');
+    ///////////////////////////////////////
+    Route::any('/roles', [RoleController::class, 'index'])->name('roles');
+    Route::get('/roles/create', [RoleController::class, 'create'])->name('add.role');
+    Route::post('/roles/create', [RoleController::class, 'store'])->name('create.role');
+    Route::get('/role/edit/{role}', [RoleController::class, 'edit'])->name('edit.role');
+    Route::post('/role/update/{role}', [RoleController::class, 'update'])->name('update.role');
 });
 
 

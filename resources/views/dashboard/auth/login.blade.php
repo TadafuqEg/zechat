@@ -55,7 +55,10 @@
                         </div>
                         @if ($errors->any())
                             @if($errors->has('msg'))
-                                <p class="alert alert-danger"id="alert" role="alert" style="padding-top:5px;padding-bottom:5px; padding-left: 10px; background-color:brown;border-radius: 20px; color:beige;">{{ $errors->first('msg') }}</p>
+                            <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                                <i class="fa fa-exclamation-circle me-2"></i>{{ $errors->first('msg') }} !
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
                             @endif
                         @endif
                         <form class="p-3 mt-3"action="{{ route('login') }}" method="POST">

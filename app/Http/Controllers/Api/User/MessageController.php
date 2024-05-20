@@ -29,10 +29,15 @@ class MessageController extends Controller
         })->orWhere(function($query) use($userId ,$user) {
             $query->where('receiver_id',$user->id)->where('sender_id',$userId);
         })->orderBy('id','DESC')->paginate(20);
+        
         foreach ($messages->items() as $msg) {
+            
             $msg->time = $msg->created_at->setTimezone('Africa/Cairo')->format('h:i A');
-            if($msg->path!=null)
-              $msg->path=url($msg->path);
+            
+            if($msg->path!=null){
+                $msg->path=url($msg->path);
+            }
+              
             
         }
         return $this->successWithPagination(data:$messages);
@@ -68,6 +73,7 @@ class MessageController extends Controller
             'type' => 'new_message',
             'message' => $message->message,
             'sender_id' => $user->id,
+            'sender_uid'=>$user->uid,
             'sender_name' => $user->name,
             'sender_email' => $user->email,
             'receiver_id' => $receiver->id,
@@ -78,6 +84,7 @@ class MessageController extends Controller
             'title'=>'you have a new message from '.$user->name,
             'message' => $message->message,
             'sender_id' => $user->id,
+            'sender_uid'=>$user->uid,
             'sender_name' => $user->name,
             'sender_email' => $user->email,
             'receiver_id' => $receiver->id,
@@ -109,6 +116,7 @@ class MessageController extends Controller
             'sender_id' => $sender->id,
             'sender_name' => $sender->name,
             'sender_email' => $sender->email,
+            'sender_uid'=>$sender->uid,
             'receiver_id' => $receiver->id,
             'receiver_name' => $receiver->name,
             'receiver_email' => $receiver->email,
@@ -119,6 +127,7 @@ class MessageController extends Controller
             'sender_id' => $sender->id,
             'sender_name' => $sender->name,
             'sender_email' => $sender->email,
+            'sender_uid'=>$sender->uid,
             'receiver_id' => $receiver->id,
             'receiver_name' => $receiver->name,
             'receiver_email' => $receiver->email,
@@ -176,6 +185,7 @@ class MessageController extends Controller
                 'sender_id' => $user->id,
                 'sender_name' => $user->name,
                 'sender_email' => $user->email,
+                'sender_uid'=>$user->uid,
                 'receiver_id' => $client->id,
                 'receiver_name' => $client->name,
                 'receiver_email' => $client->email,
@@ -186,6 +196,7 @@ class MessageController extends Controller
                 'sender_id' => $user->id,
                 'sender_name' => $user->name,
                 'sender_email' => $user->email,
+                'sender_uid'=>$user->uid,
                 'receiver_id' => $client->id,
                 'receiver_name' => $client->name,
                 'receiver_email' => $client->email,

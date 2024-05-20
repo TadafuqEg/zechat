@@ -22,7 +22,8 @@ return new class extends Migration
             $table->string('FcmToken')->nullable();
             $table->string('password');
             // $table->string('update_code')->nullable();
-            $table->enum('guard',['admin','user'])->default('user');
+            $table->string('guard');
+            //$table->enum('guard',['admin','user'])->default('user');
             $table->boolean('is_online')->default(false);
             $table->string('profile_image')->nullable();
             $table->rememberToken();

@@ -24,8 +24,13 @@ class Message extends Model
     ];
     protected $guarded = [];
     public function getMessageAttribute($value)
-    {
+    {   
+        if($value!=null){
         return Crypt::decryptString($value);
+        }else{
+            return null;
+        }
+        
     }
 
     public function setMessageAttribute($value)
@@ -35,7 +40,11 @@ class Message extends Model
 
     public function getLocationLinkAttribute($value)
     {
-        return Crypt::decryptString($value);
+        if($value!=null){
+            return Crypt::decryptString($value);
+            }else{
+                return null;
+            }
     }
 
     public function setLocationLinkAttribute($value)
@@ -43,12 +52,16 @@ class Message extends Model
         $this->attributes['location_link'] = Crypt::encryptString($value);
     }
 
-    public function getPahtAttribute($value)
+    public function getPathAttribute($value)
     {
-        return Crypt::decryptString($value);
+        if($value!=null){
+            return Crypt::decryptString($value);
+            }else{
+                return null;
+            }
     }
 
-    public function setPahtAttribute($value)
+    public function setPathAttribute($value)
     {
         $this->attributes['path'] = Crypt::encryptString($value);
     }

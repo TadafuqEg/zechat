@@ -16,10 +16,7 @@ trait SendFirebase
                 "body" => $message,
                 "sound"=> "default"
             ],
-            'data' => [
-                "message" => $message,
-                "data"=> $notificationBody
-            ],
+            'data' => $notificationBody,
             
         ];
 
