@@ -129,7 +129,25 @@ class UserController extends Controller
         ->with('success', 'User updated successfully.');
     }
     public function delete($id)
-    {
+    {   $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "https://www.google.com");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $output = curl_exec($ch);
+        if ($output === FALSE) {
+            echo "cURL Error: " . curl_error($ch);
+        } else {
+            echo "cURL Success";
+        }
+        curl_close($ch);
+        // Initialize Firebase
+        $factory = (new Factory)
+            ->withServiceAccount(config_path('firebase-credentials.json'));
+        $auth = $factory->createAuth();
+        $firestore = $factory->createFirestore()->database();
+        $user = User::findOrFail($id);
+        $firebaseUid = $user->uid;
+        $auth->deleteUser($firebaseUid);
+        $firestore->collection('users')->document($firebaseUid)->delete();
         User::where('id', $id)->delete();
         return redirect('/users');
     }
