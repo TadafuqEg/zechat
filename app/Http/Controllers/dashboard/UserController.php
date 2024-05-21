@@ -75,7 +75,6 @@ class UserController extends Controller
         // Initialize Firebase
         $factory = (new Factory)
             ->withServiceAccount(config_path('firebase-credentials.json'));
-    
         $auth = $factory->createAuth();
        //dd($request->email,$request->password);
         // Create the Firebase Auth user
