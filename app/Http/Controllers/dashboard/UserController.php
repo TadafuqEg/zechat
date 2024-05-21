@@ -60,7 +60,7 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => $request->password,
-            'guard_name' => $role->name,
+            'guard' => $role->name,
         ];
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, "https://www.google.com");
@@ -90,9 +90,10 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => $request->password, // Note: Consider not storing plain passwords.
         ];
-    
+        
         // Create the Firestore document
         $firestore = $factory->createFirestore()->database();
+        
         $firestore->collection('users')->document($firebaseUser->uid)->set($firebaseData);
     
         // Create the user in the local database
