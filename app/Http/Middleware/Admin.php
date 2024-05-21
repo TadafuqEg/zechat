@@ -26,15 +26,16 @@ class Admin
         }
         
         
-        if(auth()->user()->guard!='admin')
-        {   
+        if(auth()->user()->guard=='admin' || auth()->user()->guard=='super admin'){
+            return $next($request);
+        }else{   
                 Auth::logout();
 
             return redirect('/login')->withErrors(['msg' => 'Please verify that your information is correct']);
         }
         
 
-    return $next($request);
+    
        
     }
 }

@@ -5,7 +5,7 @@ use App\Models\User;
 use App\Enums\Pagination;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-
+use Spatie\Permission\Models\Role;
 class UserService
 {
     public function login($data){
@@ -33,6 +33,8 @@ class UserService
     public function register($data){
         $data['lastSignInTime']  = now()->format('Y-m-d H:i:s');
         $user =  User::create($data);
+        $role = Role::where('name','user')->first();
+        $user->assignRole($role->id);
         $user->access_token = $user->createToken('testing')->plainTextToken;
         return response(['success' => true,'data'=>$user,'message'=>'The operation has been done'],200);
     }

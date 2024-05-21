@@ -8,7 +8,9 @@
                     <div class="bg-secondary rounded h-100 p-4">
                         <div style="display: flex;justify-content: space-between;">
                             <h6 class="mb-4">Roles Table</h6>
-                            <a type="button" href="{{url('/roles/create')}}" class="btn btn-outline-info m-2" style="margin-top:-0.5% !important; float:right;">Create Role</a>
+                            @can('create roles')
+                                <a type="button" href="{{url('/roles/create')}}" class="btn btn-outline-info m-2" style="margin-top:-0.5% !important; float:right;">Create Role</a>
+                            @endcan
                         </div>
                         
                         <div class="table-responsive">
@@ -42,9 +44,11 @@
                                         
                                        
                                         <td style="text-align:center;">
-                                            <a href="{{url('/role/edit/'.$role->id)}}" style="margin-right: 1rem;">
-                                            <span  class="bi bi-pen" style="font-size: 1rem; color: rgb(0,255,0);" title="Edit"></span>
-                                            </a>
+                                            @can('edit roles')
+                                                <a href="{{url('/role/edit/'.$role->id)}}" style="margin-right: 1rem;">
+                                                <span  class="bi bi-pen" style="font-size: 1rem; color: rgb(0,255,0);" title="Edit"></span>
+                                                </a>
+                                            @endcan
                                             
                                            
                                         </td>

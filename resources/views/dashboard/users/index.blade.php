@@ -8,7 +8,9 @@
                     <div class="bg-secondary rounded h-100 p-4">
                         <div style="display: flex;justify-content: space-between;">
                             <h6 class="mb-4">Users Table</h6>
-                            <a type="button" href="{{url('/users/create')}}" class="btn btn-outline-info m-2" style="margin-top:-0.5% !important; float:right;">Create User</a>
+                            @can('create users')
+                                <a type="button" href="{{url('/users/create')}}" class="btn btn-outline-info m-2" style="margin-top:-0.5% !important; float:right;">Create User</a>
+                            @endcan
                         </div>
                         
                         <div class="table-responsive">
@@ -35,13 +37,16 @@
                                         <td>{{ucwords($user->guard)}}</td>
                                        
                                         <td>
+                                            @can('edit users')
                                             <a href="{{url('/user/edit/'.$user->id)}}" style="margin-right: 1rem;">
                                             <span  class="bi bi-pen" style="font-size: 1rem; color: rgb(0,255,0);" title="Edit"></span>
                                             </a>
-                                            
+                                            @endcan
+                                            @can('delete users')
                                             <a href="{{url('/user/delete/'.$user->id)}}">
                                                 <span class="bi bi-trash" style="font-size: 1rem; color: rgb(255,0,0);" title="Delete"></span>
                                             </a>
+                                            @endcan
                                         </td>
                                     </tr>
                                     @endforeach
