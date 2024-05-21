@@ -81,8 +81,6 @@ class UserController extends Controller
        //dd($request->email,$request->password);
         // Create the Firebase Auth user
         $firebaseUser = $auth->createUserWithEmailAndPassword($request->email, $request->password);
-        
-    
         // Prepare data for Firebase Firestore
         $firebaseData = [
             'uid' => $firebaseUser->uid,
