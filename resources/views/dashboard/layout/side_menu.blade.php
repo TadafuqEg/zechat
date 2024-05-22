@@ -10,16 +10,16 @@
             </div>
             <div class="ms-3">
                 <h6 class="mb-0">{{auth()->user()->name}}</h6>
-                <span>Admin</span>
+                <span>{{ucwords(auth()->user()->guard)}}</span>
             </div>
         </div>
         <div class="navbar-nav w-100">
             <a href="{{url('/users')}}" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
             @can('create roles')
-            <a href="{{url('/roles')}}" class="nav-item nav-link"><i class="fa fa-users me-2"></i>Roles</a>
+            <a href="{{url('/roles')}}" class="nav-item nav-link"><i class="fa fa-users-cog me-2"></i>Roles</a>
             @endcan
             @can('create sections')
-            <a href="{{url('/sections')}}" class="nav-item nav-link"><i class="fa fa-folder me-2"></i>Sections</a>
+            <a href="{{url('/sections')}}" class="nav-item nav-link"><i class="fa fa-th-large me-2"></i>Sections</a>
             @endcan
             @can('create users')
             <a href="{{url('/users')}}" class="nav-item nav-link"><i class="fa fa-users me-2"></i>Users</a>

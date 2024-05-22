@@ -33,9 +33,16 @@
                                         @foreach($all_users as $key => $user)
                                         <tr>
                                             <th scope="row">{{$counter++}}</th>
-                                            <td>{{$user->name}}</td>
+                                            <td style="display: flex;"> <div class="position-relative">
+                                                <img class="rounded-circle" src="{{asset('logos/user_logo.png')}}" alt="" style="width: 40px; height: 40px;">
+                                                <div class="bg-@if($user->is_online==1) success @else wrong @endif rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
+                                            </div>
+                                            <div class="ms-3" style="height: 3%; margin-top:4%;">
+                                                <h6 class="mb-0">{{$user->name}}</h6>
+                                                
+                                            </div></td>
                                             <td>{{$user->email}}</td>
-                                            <td>{{$user->section->name}}</td>
+                                            <td>@if($user->section_id) {{$user->section->name}} @else _ @endif </td>
                                             <td>{{ucwords($user->guard)}}</td>
                                         
                                             <td>
