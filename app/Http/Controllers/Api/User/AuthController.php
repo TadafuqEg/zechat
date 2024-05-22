@@ -92,6 +92,7 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         $user = $request->user();
+        $user->is_online=0;
         $user->FcmToken=null;
         $user->save();
         // Revoke all tokens for the user
