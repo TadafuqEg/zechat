@@ -8,7 +8,7 @@
                     <div class="bg-secondary rounded h-100 p-4">
                         <div style="display: flex;justify-content: space-between;">
                             <h6 class="mb-4">Sections Table</h6>
-                            @can('create users')
+                            @can('create sections')
                                 <a type="button" href="{{url('/sections/create')}}" class="btn btn-outline-info m-2" style="margin-top:-0.5% !important; float:right;">Create Section</a>
                             @endcan
                         </div>
@@ -42,7 +42,7 @@
                                                 </a>
                                                 @endcan
                                                 @can('delete sections')
-                                                <a href="{{url('/section/delete/'.$section->id)}}">
+                                                <a href="{{route('delete.section',$section)}}">
                                                     <span class="bi bi-trash" style="font-size: 1rem; color: rgb(255,0,0);" title="Delete"></span>
                                                 </a>
                                                 @endcan

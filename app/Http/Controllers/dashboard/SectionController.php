@@ -89,4 +89,11 @@ class SectionController extends Controller
         return redirect()->route('sections')
             ->with('success', 'Section updated successfully.');
     }
+    public function delete(Section $section)
+    {
+        $section->delete();
+
+        return redirect()->route('sections')
+            ->with('success', 'Section deleted successfully.');
+    }
 }

@@ -50,7 +50,7 @@ Route::group(['middleware' => ['admin']], function () {
     Route::post('/sections/create', [SectionController::class, 'store'])->name('create.section');
     Route::get('/section/edit/{id}', [SectionController::class, 'edit'])->name('edit.section');
     Route::post('/section/update/{section}', [SectionController::class, 'update'])->name('update.section');
-    Route::get('/section/delete/{id}', [SectionController::class, 'delete'])->name('delete.section');
+    Route::get('/section/delete/{section}', [SectionController::class, 'delete'])->name('delete.section');
 });
 
 
