@@ -49,5 +49,6 @@ Route::group(['middleware' => ['json.response','cors']], function () {
         Route::post('logout', 'AuthController@logout');
         Route::get('get-admin-messages','MessageController@all_admin_message');
         Route::get('see-notification/{id}','AuthController@see_notification');
+        Route::post('activation_user', 'AuthController@activation_user');
     });
 });

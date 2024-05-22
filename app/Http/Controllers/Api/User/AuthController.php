@@ -124,4 +124,15 @@ class AuthController extends Controller
         
         return $this->success('notification seen successfuly');
     }
+
+    public function activation_user(Request $request){
+        $user = $request->user();
+        if($user->is_online==0){
+            $user->is_online=1;
+        }else{
+            $user->is_online=0;
+        }
+        $user->save();
+        return $this->success('you are not active now');
+    }
 }
