@@ -22,6 +22,7 @@ use Kreait\Firebase\Exception\Auth\EmailExists;
 use Kreait\Firebase\Exception\Auth\AuthError;
 use GuzzleHttp\Client;
 use File;
+use App\Models\Section;
 use Google\Cloud\Core\Timestamp;
 class UserController extends Controller
 {
@@ -41,7 +42,8 @@ class UserController extends Controller
 
     public function create(){
         $roles=Role::all();
-        return view('dashboard.users.create',compact('roles'));
+        $sections=Section::where('is_active',1)->get();
+        return view('dashboard.users.create',compact('roles','sections'));
     }
      
     public function store(Request $request)
@@ -51,7 +53,8 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email',
             'password' => 'required|string|confirmed',
-            'role' => ['required', Rule::in(Role::pluck('id')->toArray())],
+            'role' => ['required', Rule::in(Role::pluck('id'))],
+            'section' => ['required', Rule::in(Section::pluck('id'))],
         ]);
     
         // Find the role
@@ -61,6 +64,7 @@ class UserController extends Controller
         $userData = [
             'name' => $request->name,
             'email' => $request->email,
+            'section_id' => $request->section,
             'password' => $request->password,
             'guard' => $role->name,
         ];
@@ -117,19 +121,20 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->roles;
         $roles=Role::all();
-
-        return view('dashboard.users.edit',compact('roles','user'));
+        $sections=Section::where('is_active',1)->get();
+        return view('dashboard.users.edit',compact('roles','user','sections'));
     }
     public function update(Request $request, User $user){
         $request->validate([
             'name' => 'required',
             'email' => 'required|unique:users,email,'.$user->id,
-            
+            'section' => ['required', Rule::in(Section::pluck('id'))],
             'role' => ['required',Rule::in(Role::pluck('id'))],
         ]);
         $role = Role::find($request->role);
         $data['name']=$request->name;
         $data['email']=$request->email;
+        $data['section_id']=$request->section;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, "https://www.google.com");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

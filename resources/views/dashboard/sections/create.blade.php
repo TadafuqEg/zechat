@@ -1,12 +1,12 @@
 @extends('dashboard.layout.app')
-@section('title', 'Create Role')
+@section('title', 'Create Section')
 @section('content')
 <div class="container-fluid pt-4 px-4">
     <div class="row g-4">
         <div class="col-12">
             <div class="bg-secondary rounded h-100 p-4">
-                <h6 class="mb-4">Create Role</h6>
-                <form action="{{ route('create.role') }}" method="POST">
+                <h6 class="mb-4">Create Section</h6>
+                <form action="{{ route('create.section') }}" method="POST">
                     @csrf
                     <div class="row mb-3">
                         <label for="inputEmail3" class="col-sm-2 col-form-label">Name</label>
@@ -21,18 +21,18 @@
                     
                    
                     <div class="row mb-3">
-                        <legend class="col-form-label col-sm-2 pt-0">Permissions</legend>
-                        <div class="col-sm-10" style="display: flex;flex-wrap: wrap;">
-                            @foreach ($permissions as $permission)
-                                <div class="form-check form-switch" style="width: 33%;margin-bottom:1%">
-                                    <input class="form-check-input" name="permissions[]" value="{{$permission->name}}"@if(in_array($permission->name, old('permissions', []))) 
-                                    checked 
-                                @endif  type="checkbox" role="switch"
-                                        id="flexSwitchCheckDefault_{{$permission->id}}">
-                                    <label class="form-check-label" for="flexSwitchCheckDefault_{{$permission->id}}">{{ucwords($permission->name)}}</label>
+                        <legend class="col-form-label col-sm-2 pt-0">Activation</legend>
+                        <div class="col-sm-10">
+                            
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" name="is_active"  type="checkbox" role="switch"
+                                        id="flexSwitchCheckDefault" value="1" @if(old('is_active')) 
+                                        checked 
+                                    @endif >
+                                    <label class="form-check-label" for="flexSwitchCheckDefault">active</label>
                                 </div>
                                
-                            @endforeach
+                            
                             
                         </div>
                     </div>

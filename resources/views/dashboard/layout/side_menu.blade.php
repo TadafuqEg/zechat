@@ -18,6 +18,9 @@
             @can('create roles')
             <a href="{{url('/roles')}}" class="nav-item nav-link"><i class="fa fa-users me-2"></i>Roles</a>
             @endcan
+            @can('create sections')
+            <a href="{{url('/sections')}}" class="nav-item nav-link"><i class="fa fa-folder me-2"></i>Sections</a>
+            @endcan
             @can('create users')
             <a href="{{url('/users')}}" class="nav-item nav-link"><i class="fa fa-users me-2"></i>Users</a>
             @endcan

@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Http\Controllers\dashboard\AuthController;
 use App\Http\Controllers\dashboard\UserController;
 use App\Http\Controllers\dashboard\RoleController;
+use App\Http\Controllers\dashboard\SectionController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -43,6 +44,13 @@ Route::group(['middleware' => ['admin']], function () {
     Route::post('/roles/create', [RoleController::class, 'store'])->name('create.role');
     Route::get('/role/edit/{role}', [RoleController::class, 'edit'])->name('edit.role');
     Route::post('/role/update/{role}', [RoleController::class, 'update'])->name('update.role');
+    /////////////////////////////////////////
+    Route::any('/sections', [SectionController::class, 'index'])->name('sections');
+    Route::get('/sections/create', [SectionController::class, 'create'])->name('add.section');
+    Route::post('/sections/create', [SectionController::class, 'store'])->name('create.section');
+    Route::get('/section/edit/{id}', [SectionController::class, 'edit'])->name('edit.section');
+    Route::post('/section/update/{section}', [SectionController::class, 'update'])->name('update.section');
+    Route::get('/section/delete/{id}', [SectionController::class, 'delete'])->name('delete.section');
 });
 
 

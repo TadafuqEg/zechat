@@ -23,8 +23,11 @@ return new class extends Migration
             $table->string('password');
             // $table->string('update_code')->nullable();
             $table->string('guard');
+            
             //$table->enum('guard',['admin','user'])->default('user');
             $table->boolean('is_online')->default(false);
+            $table->unsignedBigInteger('section_id');
+            $table->foreign('section_id')->references('id')->on('sections')->onDelete('cascade');
             $table->string('profile_image')->nullable();
             $table->rememberToken();
             $table->timestamps();

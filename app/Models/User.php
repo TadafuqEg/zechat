@@ -40,4 +40,8 @@ class User extends Authenticatable
         'created_at' => CustomDateTimeCast::class,
         'updated_at' => CustomDateTimeCast::class,
     ];
+
+    public function section(){
+        return $this->belongsTo(Section::class,'section_id','id');
+    }
 }

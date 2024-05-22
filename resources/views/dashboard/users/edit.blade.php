@@ -48,6 +48,23 @@
                         @endif
                         </div>
                     </div>
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">Section</label>
+                        <div class="col-sm-10">
+                            <select class="form-select" id="floatingSelect" name="section"
+                                aria-label="Floating label select example">
+                                <option value="" selected disabled>Select Section</option>
+                                @foreach($sections as $section)
+                                <option value="{{$section->id}}" @if(old('section')==$section->id || $user->section_id==$section->id) selected @endif>{{ucwords($section->name)}}</option>
+                                @endforeach
+                               
+                            </select>
+                            @if ($errors->has('section'))
+                            <p class="text-error more-info-err" style="color: red;">
+                                {{ $errors->first('section') }}</p>
+                        @endif
+                        </div>
+                    </div>
                     <button type="submit" class="btn btn-primary">Save</button>
                 </form>
             </div>

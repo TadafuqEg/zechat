@@ -1,15 +1,15 @@
 @extends('dashboard.layout.app')
-@section('title', 'Users')
+@section('title', 'Sections')
 @section('content')
     <div class="container-fluid pt-4 px-4">
-        @if(!empty($all_users) && $all_users->count())
+        @if(!empty($all_sections) && $all_sections->count())
             <div class="row g-4">
                 <div class="col-12">
                     <div class="bg-secondary rounded h-100 p-4">
                         <div style="display: flex;justify-content: space-between;">
-                            <h6 class="mb-4">Users Table</h6>
+                            <h6 class="mb-4">Sections Table</h6>
                             @can('create users')
-                                <a type="button" href="{{url('/users/create')}}" class="btn btn-outline-info m-2" style="margin-top:-0.5% !important; float:right;">Create User</a>
+                                <a type="button" href="{{url('/sections/create')}}" class="btn btn-outline-info m-2" style="margin-top:-0.5% !important; float:right;">Create Section</a>
                             @endcan
                         </div>
                         
@@ -19,33 +19,30 @@
                                     <tr>
                                         <th scope="col">#</th>
                                         <th scope="col">Name</th>
+                                        <th scope="col">Activation</th>
                                         
-                                        <th scope="col">Email</th>
-                                        <th scope="col">Section</th>
-                                        <th scope="col">Role</th>
                                         <th scope="col">Action</th>
                                     </tr>
                                 </thead>
                                 @php
-                                    $counter = $all_users->firstItem(); // Get the starting index of the current page
+                                    $counter = $all_sections->firstItem(); // Get the starting index of the current page
                                 @endphp
                                 <tbody>
-                                    @foreach($all_users as $key => $user)
+                                    @foreach($all_sections as $key => $section)
                                     <tr>
                                         <th scope="row">{{$counter++}}</th>
-                                        <td>{{$user->name}}</td>
-                                        <td>{{$user->email}}</td>
-                                        <td>{{$user->section->name}}</td>
-                                        <td>{{ucwords($user->guard)}}</td>
+                                        <td>{{ucwords($section->name)}}</td>
+                                        <td>@if($section->is_active==1) <span class="badge badge-secondary" style="background-color:rgb(50, 134, 50); width:20%;">Active</span> @else <span class="badge badge-secondary" style="background-color:rgb(255,0,0);width:20%;">Unactive</span> @endif</td>
+                                        
                                        
                                         <td>
-                                            @can('edit users')
-                                            <a href="{{url('/user/edit/'.$user->id)}}" style="margin-right: 1rem;">
+                                            @can('edit sections')
+                                            <a href="{{url('/section/edit/'.$section->id)}}" style="margin-right: 1rem;">
                                             <span  class="bi bi-pen" style="font-size: 1rem; color: rgb(0,255,0);" title="Edit"></span>
                                             </a>
                                             @endcan
-                                            @can('delete users')
-                                            <a href="{{url('/user/delete/'.$user->id)}}">
+                                            @can('delete sections')
+                                            <a href="{{url('/section/delete/'.$section->id)}}">
                                                 <span class="bi bi-trash" style="font-size: 1rem; color: rgb(255,0,0);" title="Delete"></span>
                                             </a>
                                             @endcan
@@ -57,7 +54,7 @@
                             
                         </div>
                         <div class="jsgrid-grid-body"style="text-align: center;padding-left:45%;">
-                            {!! $all_users->links("pagination::bootstrap-4") !!}
+                            {!! $all_sections->links("pagination::bootstrap-4") !!}
 
                         </div>
                         
