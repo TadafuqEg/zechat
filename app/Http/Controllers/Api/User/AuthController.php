@@ -127,12 +127,12 @@ class AuthController extends Controller
 
     public function activation_user(Request $request){
         $user = $request->user();
-        if($user->is_online==0){
-            $user->is_online=1;
-        }else{
-            $user->is_online=0;
-        }
+       
+            
+       
+        $user->is_online=$request->active;
+        
         $user->save();
-        return $this->success('you are not active now');
+        return $this->success('success');
     }
 }
