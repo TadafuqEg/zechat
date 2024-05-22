@@ -8,9 +8,21 @@
                     <div class="bg-secondary rounded h-100 p-4">
                         <div style="display: flex;justify-content: space-between;">
                             <h6 class="mb-4">Users Table</h6>
-                            @can('create users')
-                                <a type="button" href="{{url('/users/create')}}" class="btn btn-outline-info m-2" style="margin-top:-0.5% !important; float:right;">Create User</a>
-                            @endcan
+                            <div style="display: flex;justify-content: space-between; ">
+                                <form class="d-none d-md-flex ms-4"style="margin-top:-0.5% !important;" action="{{ route('users') }}" method="POST">
+                                    @csrf
+                                    <div class="input-group">
+                                        <input class="form-control bg-dark border-0" type="search"name="search" placeholder="Search">
+                                        <button class="btn btn-link text-white" type="submit">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                                @can('create users')
+                                    <a type="button" href="{{url('/users/create')}}" class="btn btn-outline-info m-2" style="margin-top:-0.5% !important; float:right;">Create User</a>
+                                @endcan
+                            </div>
+                            
                         </div>
                         @if(!empty($all_users) && $all_users->count())
                             <div class="table-responsive">

@@ -8,9 +8,21 @@
                     <div class="bg-secondary rounded h-100 p-4">
                         <div style="display: flex;justify-content: space-between;">
                             <h6 class="mb-4">Roles Table</h6>
-                            @can('create roles')
-                                <a type="button" href="{{url('/roles/create')}}" class="btn btn-outline-info m-2" style="margin-top:-0.5% !important; float:right;">Create Role</a>
-                            @endcan
+                            <div style="display: flex;justify-content: space-between; ">
+                                <form class="d-none d-md-flex ms-4"style="margin-top:-0.5% !important;" action="{{ route('roles') }}" method="POST">
+                                    @csrf
+                                    <div class="input-group">
+                                        <input class="form-control bg-dark border-0" type="search"name="search" placeholder="Search">
+                                        <button class="btn btn-link text-white" type="submit">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                                @can('create roles')
+                                     <a type="button" href="{{url('/roles/create')}}" class="btn btn-outline-info m-2" style="margin-top:-0.5% !important; float:right;">Create Role</a>
+                                @endcan
+                            </div>
+                           
                         </div>
                         @if(!empty($roles) && $roles->count())
                             <div class="table-responsive">
