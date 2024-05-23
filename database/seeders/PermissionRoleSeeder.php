@@ -21,7 +21,10 @@ class PermissionRoleSeeder extends Seeder
         ];
 
         foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
+            $permission=Permission::where('name' , $permission)->first();
+            if(!$permission){
+                Permission::create(['name' => $permission]);
+            }
         }
 
         $roles = [
@@ -32,7 +35,10 @@ class PermissionRoleSeeder extends Seeder
         ];
 
         foreach ($roles as $role) {
-            Role::create(['name' => $role]);
+            $role=Role::where('name' , $role)->first();
+            if(!$role){
+                Role::create(['name' => $role]);
+            }
         }
         $permissions = Permission::pluck('id', 'id')->all();
         $admin_role = Role::where('name','super admin')->first();
