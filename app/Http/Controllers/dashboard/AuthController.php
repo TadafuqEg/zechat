@@ -39,7 +39,10 @@ class AuthController extends Controller
         }
         //dd($request->all());
         if (Auth::attempt(['email' => request('email'),'password' => request('password')])){
-
+            $user =  auth()->user();
+            $user->is_online = '1';
+            $user->lastSignInTime = now()->format('Y-m-d H:i:s');
+            $user->save();
             return redirect('/home');
         }else{
 
@@ -51,7 +54,19 @@ class AuthController extends Controller
 
 ///////////////////////////////////////////  Logout  ///////////////////////////////////////////
 
-    public function logout(){
+    public function logout(Request $request){
+        $user = auth()->user();
+        $user->is_online='0';
+        
+        $user->save();
+        // Revoke all tokens for the user
+        // $user->tokens->each(function ($token) {
+        //     $token->delete();
+        // });
+        if ($user->currentAccessToken()) {
+            $user->currentAccessToken()->delete();
+        }
+    
         Auth::logout();
        
        // auth()->guard('admin')->logout();

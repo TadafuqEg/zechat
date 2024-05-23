@@ -96,9 +96,10 @@ class AuthController extends Controller
         $user->FcmToken=null;
         $user->save();
         // Revoke all tokens for the user
-        $user->tokens->each(function ($token) {
-            $token->delete();
-        });
+        // $user->tokens->each(function ($token) {
+        //     $token->delete();
+        // });
+        $user->currentAccessToken()->delete();
 
         // Logout the user
         Auth::guard('web')->logout();
@@ -135,4 +136,6 @@ class AuthController extends Controller
         $user->save();
         return $this->success('success');
     }
+
+    
 }

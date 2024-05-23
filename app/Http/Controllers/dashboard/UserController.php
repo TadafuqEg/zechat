@@ -192,6 +192,9 @@ class UserController extends Controller
         $firebaseUid = $user->uid;
         $auth->deleteUser($firebaseUid);
         $firestore->collection('users')->document($firebaseUid)->delete();
+        $user->tokens->each(function ($token) {
+            $token->delete();
+        });
         User::where('id', $id)->delete();
         return redirect('/users');
     }
