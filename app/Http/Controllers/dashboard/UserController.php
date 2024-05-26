@@ -98,11 +98,13 @@ class UserController extends Controller
         
         $firebaseUser = $auth->createUserWithEmailAndPassword($request->email, $request->password);
         // Prepare data for Firebase Firestore
+        $dateTime = new \DateTime(date('Y-m-d H:i:s'));
+        $timestamp = new Timestamp($dateTime);
         $firebaseData = [
             'userid' => $firebaseUser->uid,
             'name' => $request->name,
             'email' => $request->email,
-            'created_at'=>FieldValue::serverTimestamp()
+            'created_at'=>$timestamp
              // Note: Consider not storing plain passwords.
         ];
         
