@@ -15,6 +15,10 @@ use App\Models\User;
 use Illuminate\Validation\Rule;
 use Image;
 use Str;
+use Google\Cloud\Firestore\FirestoreClient;
+use Google\Cloud\Core\Timestamp;
+use Google\Cloud\Firestore\FieldValue;
+use Carbon\Carbon;
 use DateTime;
 use DateTimeZone;
 use Kreait\Firebase\Factory;
@@ -23,7 +27,7 @@ use Kreait\Firebase\Exception\Auth\AuthError;
 use GuzzleHttp\Client;
 use File;
 use App\Models\Section;
-use Google\Cloud\Core\Timestamp;
+
 class UserController extends Controller
 {
     public function index(Request $request)
@@ -84,9 +88,11 @@ class UserController extends Controller
         $auth = $factory->createAuth();
        //dd($request->email,$request->password);
         // Create the Firebase Auth user
-        $timestamp = new Timestamp(new \DateTime());
-        $dateTime = $timestamp->get()->format('Y-m-d H:i:s');
-
+        // $timestamp = new Timestamp(new \DateTime());
+        // $dateTime = $timestamp->get()->format('Y-m-d H:i:s');
+        $date = Carbon::now()->setTimezone('Europe/Moscow');
+        $formattedDate = $date->format('F d, Y \a\t g:i:s A \U\T\CP');
+        //$timestamp = Carbon::parse($formattedDate)->timestamp;
         // Dump the DateTime object
         
         
@@ -96,7 +102,7 @@ class UserController extends Controller
             'userid' => $firebaseUser->uid,
             'name' => $request->name,
             'email' => $request->email,
-            'created_at'=>$dateTime
+            'created_at'=>FieldValue::serverTimestamp()
              // Note: Consider not storing plain passwords.
         ];
         
@@ -155,13 +161,14 @@ class UserController extends Controller
             
             'email' => $data['email'],
         ]);
-
+        $dateTime = new \DateTime(date('Y-m-d H:i:s',strtotime($user->created_at)));
+        $timestamp = new Timestamp($dateTime);
         // Update user document in Firestore
         $firestore->collection('users')->document($firebaseUid)->set([
             'name' => $data['name'],
             'email' => $data['email'],
             'userid' => $user->uid,
-            'created_at' => date('Y-m-d H:i:s',strtotime($user->created_at))
+            'created_at' => $timestamp
             
             
         ]);
