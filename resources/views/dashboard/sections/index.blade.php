@@ -50,12 +50,14 @@
                                             <td>
                                                 @can('edit sections')
                                                 <a href="{{url('/section/edit/'.$section->id)}}" style="margin-right: 1rem;">
-                                                <span  class="bi bi-pen" style="font-size: 1rem; color: rgb(0,255,0);" title="Edit"></span>
+                                                    <i style="color:rgb(0,255,0);"class="fa fa-pen" title="Edit"></i>
+                                                
                                                 </a>
                                                 @endcan
                                                 @can('delete sections')
                                                 <a href="{{route('delete.section',$section)}}">
-                                                    <span class="bi bi-trash" style="font-size: 1rem; color: rgb(255,0,0);" title="Delete"></span>
+                                                    <i style="color:rgb(255,0,0);"class="fa fa-trash" title="Delete"></i>
+                                                    
                                                 </a>
                                                 @endcan
                                             </td>

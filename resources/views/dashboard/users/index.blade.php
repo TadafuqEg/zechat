@@ -60,12 +60,12 @@
                                             <td>
                                                 @can('edit users')
                                                 <a href="{{url('/user/edit/'.$user->id)}}" style="margin-right: 1rem;">
-                                                <span  class="bi bi-pen" style="font-size: 1rem; color: rgb(0,255,0);" title="Edit"></span>
+                                                    <i style="color:rgb(0,255,0);"class="fa fa-pen" title="Edit"></i>
                                                 </a>
                                                 @endcan
                                                 @can('delete users')
                                                 <a href="{{url('/user/delete/'.$user->id)}}">
-                                                    <span class="bi bi-trash" style="font-size: 1rem; color: rgb(255,0,0);" title="Delete"></span>
+                                                    <i style="color:rgb(255,0,0);"class="fa fa-trash" title="Delete"></i>
                                                 </a>
                                                 @endcan
                                             </td>

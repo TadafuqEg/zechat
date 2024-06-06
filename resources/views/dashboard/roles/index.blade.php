@@ -58,7 +58,7 @@
                                             <td style="text-align:center;">
                                                 @can('edit roles')
                                                     <a href="{{url('/role/edit/'.$role->id)}}" style="margin-right: 1rem;">
-                                                    <span  class="bi bi-pen" style="font-size: 1rem; color: rgb(0,255,0);" title="Edit"></span>
+                                                        <i style="color:rgb(0,255,0);"class="fa fa-pen" title="Edit"></i>
                                                     </a>
                                                 @endcan
                                                 
