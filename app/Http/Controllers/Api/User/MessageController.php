@@ -18,6 +18,7 @@ use Kreait\Firebase\ServiceAccount;
 use Google\Cloud\Firestore\FieldPath;
 use Google\Cloud\Firestore\FieldValue;
 use App\Events\NotificationDevice;
+use App\Events\MessageSent;
 class MessageController extends Controller
 {
     use SendFirebase;
@@ -54,6 +55,7 @@ class MessageController extends Controller
                 $path = '/storage/' . $field . 's/' . $fileName;
                 $data['path'] = $path;
                 $data['type'] = $field;
+                
             }
         }
     }
@@ -96,6 +98,8 @@ class MessageController extends Controller
             'data' => json_encode($data),
             'type' => 'new_message'
         ]);
+
+        broadcast(new MessageSent($message))->toOthers();
         //event(new NotificationDevice($user, $receiver, $message, "new_message", 'you have a new message from ' . $user->name));
     
         

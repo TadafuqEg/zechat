@@ -17,7 +17,9 @@ use App\Http\Controllers\dashboard\SectionController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
+Route::get('/rrr', function () {
+    dd(env('PUSHER_APP_ID'));
+});
 Route::get('/', function () {
     
     if(!auth()->user()){
