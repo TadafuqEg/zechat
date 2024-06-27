@@ -28,6 +28,7 @@ Route::get('/', function () {
         return redirect('/home');
     }
 });
+
 Route::get('/login', [AuthController::class, 'login_view'])->name('login.view');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::group(['middleware' => ['admin']], function () {
