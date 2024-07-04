@@ -44,4 +44,7 @@ class User extends Authenticatable
     public function section(){
         return $this->belongsTo(Section::class,'section_id','id');
     }
+    public function group(){
+        return $this->belongsTo(Group::class,'group_id','id');
+    }
 }

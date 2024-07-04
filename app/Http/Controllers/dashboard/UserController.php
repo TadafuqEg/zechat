@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Group;
 use Illuminate\Validation\Rule;
 use Image;
 use Str;
@@ -45,7 +46,13 @@ class UserController extends Controller
     }
 
     public function create(){
-        $roles=Role::all();
+        if(auth()->check() && auth()->user()->hasRole('super super admin')){
+            $roles=Role::all();
+        }else{
+            $roles=Role::whereIn('name',['admin','user'])->get();
+        }
+           
+
         $sections=Section::where('is_active',1)->get();
         return view('dashboard.users.create',compact('roles','sections'));
     }
@@ -53,6 +60,9 @@ class UserController extends Controller
     public function store(Request $request)
     {
         // Validate request input
+        if(auth()->check() && auth()->user()->hasRole('super admin')){
+            $request->merge(['section' => auth()->user()->section_id]);
+        }
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email',
@@ -60,6 +70,7 @@ class UserController extends Controller
             'role' => ['required', Rule::in(Role::pluck('id'))],
             'section' => ['required', Rule::in(Section::pluck('id'))],
         ]);
+        
     
         // Find the role
         $role = Role::findOrFail($request->role);
@@ -71,6 +82,7 @@ class UserController extends Controller
             'section_id' => $request->section,
             'password' => $request->password,
             'guard' => $role->name,
+            'group_id'=>$request->group
         ];
     //     $ch = curl_init();
     //     curl_setopt($ch, CURLOPT_URL, "https://www.google.com");
@@ -128,11 +140,18 @@ class UserController extends Controller
     public function edit($id){
         $user = User::findOrFail($id);
         $user->roles;
-        $roles=Role::all();
+        if(auth()->check() && auth()->user()->hasRole('super super admin')){
+            $roles=Role::all();
+        }else{
+            $roles=Role::whereIn('name',['admin','user'])->get();
+        }
         $sections=Section::where('is_active',1)->get();
         return view('dashboard.users.edit',compact('roles','user','sections'));
     }
     public function update(Request $request, User $user){
+        if(auth()->check() && auth()->user()->hasRole('super admin')){
+            $request->merge(['section' => auth()->user()->section_id]);
+        }
         $request->validate([
             'name' => 'required',
             'email' => 'required|unique:users,email,'.$user->id,
@@ -143,6 +162,7 @@ class UserController extends Controller
         $data['name']=$request->name;
         $data['email']=$request->email;
         $data['section_id']=$request->section;
+        $data['group_id']=$request->group;
         // $ch = curl_init();
         // curl_setopt($ch, CURLOPT_URL, "https://www.google.com");
         // curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -206,5 +226,10 @@ class UserController extends Controller
         });
         User::where('id', $id)->delete();
         return redirect('/users');
+    }
+
+    function get_section_groups($id){
+        $groups=Group::where('section_id',$id)->get();
+        return response()->json(['groups' => $groups]);
     }
 }

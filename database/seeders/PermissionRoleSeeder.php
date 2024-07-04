@@ -8,26 +8,34 @@ class PermissionRoleSeeder extends Seeder
     public function run()
     {
         $permissions = [
+            'show users',
             'create users',
             'edit users',
             'delete users',
             'create roles',
             'edit roles',
             'delete roles',
+            'show sections',
             'create sections',
             'edit sections',
             'delete sections',
+            'show groups',
+            'create groups',
+            'edit groups',
+            'delete groups',
+            
             // Add more permissions as needed
         ];
 
         foreach ($permissions as $permission) {
-            $permission=Permission::where('name' , $permission)->first();
-            if(!$permission){
+            $existed_permission=Permission::where('name' , $permission)->first();
+            if(!$existed_permission){
                 Permission::create(['name' => $permission]);
             }
         }
 
         $roles = [
+            'super super admin',
             'admin',
             'super admin',
             'user',
@@ -35,13 +43,13 @@ class PermissionRoleSeeder extends Seeder
         ];
 
         foreach ($roles as $role) {
-            $role=Role::where('name' , $role)->first();
-            if(!$role){
+            $existed_role=Role::where('name' , $role)->first();
+            if(!$existed_role){
                 Role::create(['name' => $role]);
             }
         }
         $permissions = Permission::pluck('id', 'id')->all();
-        $admin_role = Role::where('name','super admin')->first();
+        $admin_role = Role::where('name','super super admin')->first();
         $admin_role->syncPermissions($permissions);
     }
 }

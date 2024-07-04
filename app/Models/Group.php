@@ -6,14 +6,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Casts\CustomDateTimeCast;
 
-class Section extends Model
+class Group extends Model
 {
     use HasFactory;
    
-    protected $table = 'sections';
+    protected $table = 'groups';
     protected $fillable = [
         'is_active',
         'name',
+        'code',
+        'section_id',
+        'active_chat',
+        'coordinates'
        
     ];
     protected $allowedSorts = [
@@ -28,9 +32,8 @@ class Section extends Model
     {
         return $this->hasMany(User::class,'section_id');
     }
-    public function groups()
-    {
-        return $this->hasMany(Group::class,'section_id');
+    public function section(){
+        return $this->belongsTo(Section::class,'section_id','id');
     }
 
     

@@ -16,19 +16,22 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        Section::create([
+        $section=Section::create([
             'name' => 'Section 1',
         ]);
-        $guards = ['admin','user','super admin'];
-        for($i=0;$i<2;$i++){
-            $role=Role::where('name',$guards[$i])->first();
+        $guard = 'super super admin';
+       
+            $role=Role::where('name',$guard)->first();
             $user=User::create([
-                'name' => $guards[$i],
-                'email' => $guards[$i].'@gmail.com',
-                'password' => Hash::make('123456'),
-                'guard' => $guards[$i],
+                'name' => 'General Manager Admin',
+                'email' => 'g.m.admin@gmail.com',
+                'password' => Hash::make('gmadmin1594826!@#$0'),
+                'guard' => $guard,
+                'section_id'=>$section->id,
+                'is_online'=>0
             ]);
-        }
+            $user->assignRole($role->id);
+        
         // $faker = Faker::create();
         
         // for($i=0;$i<200;$i++){

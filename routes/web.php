@@ -7,6 +7,7 @@ use App\Http\Controllers\dashboard\AuthController;
 use App\Http\Controllers\dashboard\UserController;
 use App\Http\Controllers\dashboard\RoleController;
 use App\Http\Controllers\dashboard\SectionController;
+use App\Http\Controllers\dashboard\GroupController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -41,6 +42,7 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('/user/edit/{id}', [UserController::class, 'edit'])->name('edit.user');
     Route::post('/user/update/{user}', [UserController::class, 'update'])->name('update.user');
     Route::get('/user/delete/{id}', [UserController::class, 'delete'])->name('delete.user');
+    Route::get('/get_section_groups/{id}', [UserController::class, 'get_section_groups'])->name('get_section_groups');
     ///////////////////////////////////////
     Route::any('/roles', [RoleController::class, 'index'])->name('roles');
     Route::get('/roles/create', [RoleController::class, 'create'])->name('add.role');
@@ -54,6 +56,14 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('/section/edit/{id}', [SectionController::class, 'edit'])->name('edit.section');
     Route::post('/section/update/{section}', [SectionController::class, 'update'])->name('update.section');
     Route::get('/section/delete/{section}', [SectionController::class, 'delete'])->name('delete.section');
+    /////////////////////////////////////////
+    Route::any('/groups', [GroupController::class, 'index'])->name('groups');
+    Route::get('/groups/create', [GroupController::class, 'create'])->name('add.group');
+    Route::post('/groups/create', [GroupController::class, 'store'])->name('create.group');
+    Route::get('/group/edit/{id}', [GroupController::class, 'edit'])->name('edit.group');
+    Route::post('/group/update/{group}', [GroupController::class, 'update'])->name('update.group');
+    Route::get('/group/delete/{group}', [GroupController::class, 'delete'])->name('delete.group');
+    Route::get('/group/{id}', [GroupController::class, 'change_available_chat'])->name('change_available_chat');
 });
 
 

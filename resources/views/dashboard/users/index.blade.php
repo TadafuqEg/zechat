@@ -34,6 +34,7 @@
                                             
                                             <th scope="col">Email</th>
                                             <th scope="col">Section</th>
+                                            <th scope="col">Group</th>
                                             <th scope="col">Role</th>
                                             <th scope="col">Action</th>
                                         </tr>
@@ -54,19 +55,35 @@
                                                 
                                             </div></td>
                                             <td>{{$user->email}}</td>
-                                            <td>@if($user->section_id) {{$user->section->name}} @else _ @endif </td>
+                                            <td style="@if($user->section_id && $user->section->is_active==1) color:green @else color:red @endif">@if($user->section_id) {{$user->section->name}} @else __ @endif </td>
+                                            <td style="@if($user->group_id && $user->group->is_active==1) color:green @else color:red @endif">@if($user->group_id) {{$user->group->name}} @else __ @endif </td>
                                             <td>{{ucwords($user->guard)}}</td>
                                         
                                             <td>
+
                                                 @can('edit users')
-                                                <a href="{{url('/user/edit/'.$user->id)}}" style="margin-right: 1rem;">
-                                                    <i style="color:rgb(0,255,0);"class="fa fa-pen" title="Edit"></i>
-                                                </a>
+                                                    @if(auth()->user()->hasRole('super admin') && $user->section_id==auth()->user()->section_id)
+                                                    <a href="{{url('/user/edit/'.$user->id)}}" style="margin-right: 1rem;">
+                                                        <i style="color:rgb(0,255,0);"class="fa fa-pen" title="Edit"></i>
+                                                    </a>
+                                                    @elseif(auth()->user()->hasRole('super super admin'))
+                                                    <a href="{{url('/user/edit/'.$user->id)}}" style="margin-right: 1rem;">
+                                                        <i style="color:rgb(0,255,0);"class="fa fa-pen" title="Edit"></i>
+                                                    </a>
+                                                    @endif
+                                                
                                                 @endcan
                                                 @can('delete users')
+                                                @if(auth()->user()->hasRole('super admin') && $user->section_id==auth()->user()->section_id)
                                                 <a href="{{url('/user/delete/'.$user->id)}}">
                                                     <i style="color:rgb(255,0,0);"class="fa fa-trash" title="Delete"></i>
                                                 </a>
+                                                @elseif(auth()->user()->hasRole('super super admin'))
+                                                <a href="{{url('/user/delete/'.$user->id)}}">
+                                                    <i style="color:rgb(255,0,0);"class="fa fa-trash" title="Delete"></i>
+                                                </a>
+                                                @endif
+                                                
                                                 @endcan
                                             </td>
                                         </tr>

@@ -44,7 +44,7 @@
                                         @foreach($roles as $key => $role)
                                         <tr>
                                             <th scope="row">{{$counter++}}</th>
-                                            <td>{{$role->name}}</td>
+                                            <td>{{ucwords($role->name)}}</td>
                                             <td>
                                                 @foreach ($role->permissions as $key=>$permission)
                                                     <span class="badge badge-secondary" style="background-color:black;">{{ ucwords($permission->name) }}</span>

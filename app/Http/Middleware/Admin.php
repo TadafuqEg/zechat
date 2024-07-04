@@ -26,7 +26,7 @@ class Admin
         }
         
         
-        if(auth()->user()->guard=='admin' || auth()->user()->guard=='super admin'){
+        if(auth()->user()->guard=='admin' || auth()->user()->guard=='super admin' || auth()->user()->guard=='super super admin'){
             return $next($request);
         }else{   
                 Auth::logout();

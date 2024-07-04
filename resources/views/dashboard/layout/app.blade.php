@@ -7,7 +7,7 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Favicon -->
     <link href="{{asset('darkpan/img/favicon.ico')}}" rel="icon">
     <!-- Google Web Fonts -->
@@ -71,6 +71,7 @@
         <!-- Back to Top -->
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
+
 
     <!-- JavaScript Libraries -->
     <script src="{{asset('darkpan/jquery-3.4.1.min.js')}}"></script>
