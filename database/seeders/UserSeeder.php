@@ -16,9 +16,9 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $section=Section::create([
-            'name' => 'Section 1',
-        ]);
+        // $section=Section::create([
+        //     'name' => 'Section 1',
+        // ]);
         $guard = 'super super admin';
        
             $role=Role::where('name',$guard)->first();
@@ -27,7 +27,7 @@ class UserSeeder extends Seeder
                 'email' => 'g.m.admin@gmail.com',
                 'password' => Hash::make('gmadmin1594826!@#$0'),
                 'guard' => $guard,
-                'section_id'=>$section->id,
+                'section_id'=>1,
                 'is_online'=>0
             ]);
             $user->assignRole($role->id);
