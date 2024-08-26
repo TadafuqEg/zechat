@@ -165,26 +165,22 @@ class UserController extends Controller
         // }
         // curl_close($ch);
         // // Initialize Firebase
-        // $factory = (new Factory)
-        //     ->withServiceAccount(config_path('firebase-credentials.json'));
-        // $auth = $factory->createAuth();
-        // $firestore = $factory->createFirestore()->database();
-        // $firebaseUid = $user->uid;
-        // $auth->updateUser($firebaseUid, [
+        $factory = (new Factory)
+            ->withServiceAccount(config_path('firebase-credentials.json'));
+        $auth = $factory->createAuth();
+        $firestore = $factory->createFirestore()->database();
+        $firebaseUid = $user->uid;
+        $auth->updateUser($firebaseUid, [
             
-        //     'email' => $data['email'],
-        // ]);
+            'email' => $data['email'],
+        ]);
         // $dateTime = new \DateTime(date('Y-m-d H:i:s',strtotime($user->created_at)));
         // $timestamp = new Timestamp($dateTime);
         // // Update user document in Firestore
-        // $firestore->collection('users')->document($firebaseUid)->set([
-        //     'name' => $data['name'],
-        //     'email' => $data['email'],
-        //     'userid' => $user->uid,
-        //     'created_at' => $timestamp
-            
-            
-        // ]);
+        $firestore->collection('users')->document($firebaseUid)->update([
+            ['path' => 'name', 'value' => $data['name']],
+            ['path' => 'email', 'value' => $data['email']] 
+        ]);
         $data['guard']=$role->name;
         $user->update($data);
         $user->syncRoles([$role->id]);
@@ -204,14 +200,14 @@ class UserController extends Controller
         // }
         // curl_close($ch);
         // // Initialize Firebase
-        // $factory = (new Factory)
-        //     ->withServiceAccount(config_path('firebase-credentials.json'));
-        // $auth = $factory->createAuth();
-        // $firestore = $factory->createFirestore()->database();
+        $factory = (new Factory)
+            ->withServiceAccount(config_path('firebase-credentials.json'));
+        $auth = $factory->createAuth();
+        $firestore = $factory->createFirestore()->database();
         $user = User::findOrFail($id);
-        // $firebaseUid = $user->uid;
-        // $auth->deleteUser($firebaseUid);
-        // $firestore->collection('users')->document($firebaseUid)->delete();
+        $firebaseUid = $user->uid;
+        $auth->deleteUser($firebaseUid);
+        $firestore->collection('users')->document($firebaseUid)->delete();
         $user->tokens->each(function ($token) {
             $token->delete();
         });
